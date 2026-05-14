@@ -1,0 +1,202 @@
+The **Transform Engine** is the beating heart of your entire 10‑dimensional architecture — the subsystem that *actually performs* the forward and inverse transforms, applies the DecaMatrix, propagates entanglement, rebuilds metadata, and produces the state transitions that every other subsystem consumes.  
+If the USM Schema is the genome and the Replay Engine is the time machine, the Transform Engine is the **physics engine**.
+
+Below is the complete, structured, DAMMS‑aligned explanation — deep, precise, and ready for integration into your symbolic mesh workflows.
+
+---
+
+## **🔥 What the Transform Engine *is***  
+A **deterministic, reversible, schema‑driven computation engine** that performs:
+
+- **Forward Transform**  
+- **Inverse Transform**  
+- **Entanglement Propagation**  
+- **Metadata Reconstruction**  
+- **Reversible Execution Loop**  
+- **Metrics Emission**  
+
+It is the subsystem that *moves* a Ten‑D Node through state space.
+
+---
+
+## **🧩 Core Responsibilities of the Transform Engine**
+
+### **1. Apply the DecaMatrix**
+The engine multiplies the 10‑D state vector by the **DecaMatrix**:
+
+\[
+x' = A \cdot x
+\]
+
+This is the core affine transform that defines the system’s geometry.
+
+### **2. Propagate Entanglement**
+Entanglement bonds modify the transformed state:
+
+- excitatory bonds amplify  
+- inhibitory bonds suppress  
+- resonant bonds oscillate  
+
+This produces the **cross‑dimensional coupling** that gives your engine its unique behavior.
+
+### **3. Rebuild Metadata**
+The engine updates:
+
+- view manifold  
+- projection metadata  
+- semantic labels  
+- coordinate annotations  
+
+This ensures the system remains **self‑describing**.
+
+### **4. Emit Logs**
+Every transform step produces:
+
+- **Coordinate Log**  
+- **Metrics Log**  
+- **Input Log**  
+
+These logs feed the visualizer, replay engine, dashboard, and analyzers.
+
+### **5. Support Reversible Execution**
+The engine guarantees:
+
+\[
+A^{-1}(A(x)) \approx x
+\]
+
+This is the foundation of:
+
+- stability analysis  
+- chaos detection  
+- numerical correctness  
+
+---
+
+## **⚙️ Internal Structure of the Transform Engine**
+
+### **1. Input Normalization Layer**
+Validates:
+
+- schema correctness  
+- vector length  
+- matrix shape  
+- entanglement structure  
+
+Ensures the engine only processes **valid USM objects**.
+
+---
+
+### **2. Forward Transform Pipeline**
+Steps:
+
+1. apply DecaMatrix  
+2. apply entanglement propagation  
+3. rebuild metadata  
+4. compute metrics  
+5. log everything  
+
+This is the **forward physics**.
+
+---
+
+### **3. Inverse Transform Pipeline**
+Steps:
+
+1. invert DecaMatrix  
+2. reverse entanglement  
+3. rebuild metadata  
+4. compute reversible error  
+5. log everything  
+
+This is the **reverse physics**.
+
+---
+
+### **4. Metrics Emission Layer**
+Computes:
+
+- condition number  
+- determinant  
+- reversible error  
+- Δ‑norm (via Differential Analyzer)  
+- entanglement activity  
+
+These metrics feed the Grafana dashboard and stability monitors.
+
+---
+
+### **5. Schema‑Aligned Output Layer**
+Ensures all outputs conform to:
+
+- **USM Schema Architecture**  
+- versioning rules  
+- compatibility matrix  
+- migration requirements  
+
+This is what makes the engine **self‑consistent**.
+
+---
+
+## **📊 How the Transform Engine interacts with the system**
+
+| Subsystem | Interaction |
+|----------|-------------|
+| **Reversible Execution** | Uses forward + inverse transforms |
+| **Coordinate Log** | Stores state transitions |
+| **Metrics Log** | Stores stability metrics |
+| **Input Log** | Stores matrices + entanglement |
+| **Differential Analyzer** | Consumes Δ‑vectors |
+| **Projection Modes** | Consumes state vectors |
+| **Interactive Visualizer** | Renders trajectories |
+| **3D Attractor View** | Uses PCA‑3D outputs |
+| **Benchmark Harness** | Stress‑tests transforms |
+| **Replay Engine** | Reconstructs transform steps |
+
+The Transform Engine is the **central node** in the Graphviz dependency graph.
+
+---
+
+## **📦 Canonical Transform Cycle (Conceptual)**
+
+```python
+def forward(node):
+    x = node.state_vector
+    A = node.decamatrix
+    x1 = A @ x
+    x2 = apply_entanglement(x1, node.entanglement)
+    metadata = rebuild_metadata(x2)
+    return x2, metadata
+```
+
+And the inverse:
+
+```python
+def inverse(node):
+    A_inv = invert(node.decamatrix)
+    x1 = A_inv @ node.state_vector
+    x2 = reverse_entanglement(x1, node.entanglement)
+    return x2
+```
+
+This is the **canonical reversible transform pair**.
+
+---
+
+## **🎯 Final Summary**
+
+The **Transform Engine** is:
+
+> **The deterministic, reversible physics engine of the 10‑dimensional system — applying the DecaMatrix, propagating entanglement, rebuilding metadata, emitting logs, and powering the forward/inverse transform cycle that drives every subsystem.**
+
+It is the **core computational engine** of your architecture.
+
+---
+
+If you want, we can continue with:
+
+- **Replay Engine**  
+- **Input Log**  
+- **Entanglement Bonds**  
+
+Which subsystem should we explore next?
