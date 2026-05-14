@@ -1,0 +1,15 @@
+```toml
+[project]
+name = "usm-engine"
+version = "0.1.0"
+description = "USM-based 10D reversible engine with logs, replay, and diagnostics."
+requires-python = ">=3.10"
+
+[project.dependencies]
+numpy = "*"
+pydantic = "*"
+jsonschema = "*"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+```
