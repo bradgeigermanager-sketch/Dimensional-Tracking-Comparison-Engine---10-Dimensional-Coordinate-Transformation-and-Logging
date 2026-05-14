@@ -1,0 +1,166 @@
+The **Differential Analyzer** is the subsystem that reveals the *texture* of your 10‑dimensional engine’s motion — the fine‑grained, step‑to‑step behavior that exposes stability, drift, resonance, chaos, and entanglement‑driven distortions.  
+If the **Metrics Log** is the instrument panel and the **Coordinate Log** is the flight recorder, the Differential Analyzer is the **microscope**.
+
+It tells you *how* the system is moving, not just *where* it is.
+
+---
+
+# **🧩 What the Differential Analyzer *is***  
+A **Δ‑based diagnostic engine** that computes:
+
+- **Δ‑vectors** (per‑dimension change between steps)  
+- **Δ‑norms** (magnitude of change)  
+- **Δ‑statistics** (mean, max, per‑dimension drift)  
+- **Δ‑patterns** (entanglement‑driven signatures)  
+
+It transforms raw coordinate logs into **motion descriptors**.
+
+---
+
+# **📐 Internal Structure of the Differential Analyzer**
+
+It operates on two consecutive coordinate log entries:
+
+\[
+x_t, \quad x_{t+1}
+\]
+
+And computes:
+
+### **1. Δ‑Vector**
+\[
+\Delta x = x_{t+1} - x_t
+\]
+
+A 10‑element vector showing how each dimension changed.
+
+### **2. Δ‑Norm**
+\[
+\|\Delta x\| = \sqrt{\sum_i (\Delta x_i)^2}
+\]
+
+A scalar describing the *magnitude* of movement.
+
+### **3. Per‑Dimension Statistics**
+- mean Δ  
+- max Δ  
+- max |Δ|  
+- drift direction  
+- entanglement‑correlated deltas  
+
+### **4. Summary Statistics**
+Over an entire trajectory:
+
+- mean Δ‑norm  
+- max Δ‑norm  
+- per‑dimension drift  
+- entanglement‑weighted Δ patterns  
+
+This is the **motion fingerprint** of the node.
+
+---
+
+# **🎛️ What the Differential Analyzer *does***  
+
+## **1. Detects stability vs chaos**
+Stable systems have:
+
+- small Δ‑norms  
+- smooth Δ‑patterns  
+- low variance  
+
+Chaotic systems have:
+
+- large Δ‑norm spikes  
+- irregular Δ‑patterns  
+- high variance  
+
+This is your **Lyapunov‑adjacent signal**.
+
+---
+
+## **2. Reveals entanglement behavior**
+Entanglement bonds create **predictable Δ‑patterns**:
+
+- source dimension spikes → target dimension echoes  
+- inhibitory bonds → Δ suppression  
+- resonant bonds → oscillatory Δ patterns  
+
+The analyzer makes these patterns visible.
+
+---
+
+## **3. Supports visualization**
+The visualizer uses Δ‑data to render:
+
+- motion trails  
+- velocity‑like indicators  
+- Δ‑norm heatmaps  
+- entanglement‑driven distortions  
+
+---
+
+## **4. Powers anomaly detection**
+Δ‑norm spikes often indicate:
+
+- matrix instability  
+- entanglement resonance  
+- near‑singular transforms  
+- drift or blow‑up  
+
+The analyzer is the **early warning system**.
+
+---
+
+# **📊 How the Differential Analyzer appears in code**
+
+Here’s the operational core (from your earlier pipeline):
+
+```python
+deltas = vecs[1:] - vecs[:-1]          # (N-1, 10)
+delta_norms = np.linalg.norm(deltas, axis=1)
+
+summary = {
+    "mean_delta_norm": float(delta_norms.mean()),
+    "max_delta_norm": float(delta_norms.max()),
+    "per_dim_mean": deltas.mean(axis=0).tolist(),
+    "per_dim_max_abs": np.abs(deltas).max(axis=0).tolist()
+}
+```
+
+This is the **canonical Δ‑engine**.
+
+---
+
+# **🧠 How the Differential Analyzer interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Coordinate Log** | Provides raw state vectors |
+| **Metrics Log** | Correlates Δ‑norms with stability metrics |
+| **Visualizer** | Renders Δ‑based motion and heatmaps |
+| **Dashboarding** | Shows Δ‑norm trends over time |
+| **Benchmark Harness** | Computes Δ‑statistics across runs |
+| **Testing Suite** | Validates Δ‑consistency |
+
+It is the **motion analysis layer** of the engine.
+
+---
+
+# **🎯 Summary (the essence)**
+
+The **Differential Analyzer** is:
+
+> **A Δ‑based diagnostic subsystem that computes per‑step changes, magnitudes, and statistical patterns to reveal stability, drift, entanglement behavior, and chaotic transitions in the 10D engine.**
+
+It is the engine’s **microscope**, exposing the fine structure of its dynamics.
+
+---
+
+If you want, we can continue with:
+
+- **Projection Modes**  
+- **Grafana Dashboard**  
+- **Python Client Layer**  
+
+Which subsystem should we dissect next?
