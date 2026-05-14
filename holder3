@@ -1,0 +1,300 @@
+Absolutely — here are the **first two items** you requested:
+
+1. **A top‑level `index.md`** that acts as the homepage for your documentation  
+2. **A MkDocs configuration (`mkdocs.yml`)** so your docs can instantly become a full documentation website  
+
+…and then the **Quickstart Tutorial** you asked for.
+
+All three are written to drop directly into your repo.
+
+---
+
+# 📘 `docs/index.md`  
+**(Documentation Homepage — fully linked)**
+
+```markdown
+# USM Engine Documentation
+
+Welcome to the official documentation for the **USM Engine** — a schema‑first, reversible, log‑driven 10‑dimensional computational system.
+
+This site provides a complete tour of the architecture, including:
+
+---
+
+## 📐 Core Architecture
+
+- **[Architecture Overview](architecture.md)**  
+  High‑level explanation of the entire system and how the subsystems fit together.
+
+- **[USM Schema](schema.md)**  
+  The canonical JSON Schema defining all data structures.
+
+---
+
+## ⚙️ Engine Subsystems
+
+- **[Transform Engine](transform.md)**  
+  Forward physics, entanglement propagation, metrics, and logs.
+
+- **[Reversible Execution](transform.md#reversible-execution)**  
+  Forward + inverse transform cycle and reversible error.
+
+- **[Replay Engine](replay.md)**  
+  Deterministic reconstruction of any past state.
+
+- **[Differential Analyzer](differential.md)**  
+  Δ‑vectors, Δ‑norms, and local dynamics.
+
+---
+
+## 👁️ Interpretation Layer
+
+- **[View Manifold](view_manifold.md)**  
+  Semantic labels, visible/hidden dims, projections, metadata.
+
+---
+
+## 🧭 Temporal Safety
+
+- **[Versioning, Migration, Compatibility](versioning.md)**  
+  How the system evolves safely over time.
+
+---
+
+## 🗂️ Logs
+
+- **[Logs Overview](logs.md)**  
+  Input Log, Coordinate Log, Metrics Log — the causal backbone.
+
+---
+
+## 🧪 Tests
+
+Tests live in:
+
+- `usm/tests/`
+
+---
+
+## 🧰 Tools
+
+- Graphviz dependency graph:  
+  `usm/graph/dependency_graph.dot`
+
+---
+
+## 🚀 Quickstart Tutorial
+
+See:  
+**[Quickstart Tutorial](tutorial.md)**
+
+This tutorial walks you through:
+
+- creating a TenDNode  
+- running a forward transform  
+- running reversible execution  
+- generating logs  
+- replaying a step  
+- computing differentials  
+- updating the view manifold
+
+---
+
+Enjoy exploring the USM Engine.
+```
+
+---
+
+# 📘 `mkdocs.yml`  
+**(Full MkDocs configuration — ready to build a docs website)**
+
+```yaml
+site_name: USM Engine Documentation
+site_description: Schema-first, reversible, log-driven 10D computational engine
+site_author: Your Name
+repo_url: https://github.com/yourname/usm-engine
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.instant
+    - content.code.copy
+    - content.tabs.link
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture.md
+      - Schema: schema.md
+  - Engine:
+      - Transform Engine: transform.md
+      - Replay Engine: replay.md
+      - Differential Analyzer: differential.md
+  - Interpretation:
+      - View Manifold: view_manifold.md
+  - Temporal Safety:
+      - Versioning & Migration: versioning.md
+  - Logs:
+      - Logs Overview: logs.md
+  - Tutorial:
+      - Quickstart Tutorial: tutorial.md
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - footnotes
+  - tables
+  - attr_list
+```
+
+---
+
+# 📘 `docs/tutorial.md`  
+**(Quickstart Tutorial — hands‑on, runnable, and linked)**
+
+```markdown
+# Quickstart Tutorial
+
+This tutorial walks you through the core workflow of the USM Engine.
+
+You will:
+
+1. Create a `TenDNode`
+2. Run a forward transform
+3. Run reversible execution
+4. Inspect logs
+5. Replay a step
+6. Compute differentials
+7. Update the View Manifold
+
+---
+
+# 1. Create a TenDNode
+
+```python
+from usm.core.models import TenDNode, EntanglementBond, ViewManifold
+
+node = TenDNode(
+    state_vector=[0.0] * 10,
+    decamatrix=[1.0] * 121,
+    entanglement=[
+        EntanglementBond(source_dim=0, target_dim=1, ratio=0.5, type="excitatory")
+    ],
+    view_manifold=ViewManifold(
+        visible_dims=[0,1,2],
+        hidden_dims=[3,4,5,6,7,8,9],
+        labels={0:"X",1:"Y",2:"Z"},
+        projections={},
+        metadata={}
+    )
+)
+```
+
+---
+
+# 2. Run a forward transform
+
+```python
+from usm.engine.transform_engine import forward_step
+
+node2, input_log, coord_log, metrics_log = forward_step(
+    node_id="demo",
+    node=node,
+    step_index=0,
+    delta_axis=0,
+    delta_value=1.0
+)
+```
+
+---
+
+# 3. Run reversible execution
+
+```python
+from usm.engine.reversible_execution import reversible_cycle
+
+inv_coord, inv_metrics = reversible_cycle(
+    node_id="demo",
+    node=node2,
+    step_index=1
+)
+```
+
+---
+
+# 4. Inspect logs
+
+```python
+print(input_log)
+print(coord_log)
+print(metrics_log)
+print(inv_coord)
+print(inv_metrics)
+```
+
+---
+
+# 5. Replay a step
+
+```python
+from usm.engine.replay_engine import replay_step
+
+ok = replay_step(node, input_log, coord_log)
+print("Replay valid:", ok)
+```
+
+---
+
+# 6. Compute differentials
+
+```python
+from usm.engine.differential_analyzer import compute_differentials
+
+stats = compute_differentials([coord_log, inv_coord])
+print(stats)
+```
+
+---
+
+# 7. Update the View Manifold (PCA-2D)
+
+```python
+from usm.view.view_manifold import update_pca_2d
+
+node3 = update_pca_2d(node2, history=[node.state_vector])
+print(node3.view_manifold.projections)
+```
+
+---
+
+# Next Steps
+
+Explore:
+
+- **`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`**
+- **`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`**
+- **`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`**
+- **`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`**
+
+You now have a complete working pipeline.
+```
+
+---
+
+# 🎉 Your docs are now:
+
+- Fully cross‑linked  
+- MkDocs‑ready  
+- Tutorial‑equipped  
+- Professional‑grade  
+- Drop‑in GitHub compatible  
+
+If you want, I can also generate:
+
+- **A logo for the project**  
+- **A full example dataset + logs**  
+- **A demo CLI (`usm run`)**  
+- **A Jupyter notebook version of the tutorial**  
+
+Just tell me what you want next.
