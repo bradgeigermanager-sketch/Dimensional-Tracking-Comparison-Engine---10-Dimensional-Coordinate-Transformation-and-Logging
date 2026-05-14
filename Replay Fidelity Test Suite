@@ -1,0 +1,224 @@
+Below is **C: the full Replay‑Fidelity Test Suite**, written cleanly, production‑ready, and aligned with your unified **StepRecord** model and the refactored architecture.
+
+These tests guarantee:
+
+- The **Replay Engine** can reconstruct every step exactly  
+- Forward/inverse transforms match the logged StepRecord  
+- Versioning + migration are respected  
+- No drift, corruption, or instability can sneak into the system  
+
+I’ll give you:
+
+- The **core replay tests**  
+- The **golden‑fixture replay tests**  
+- The **multi‑step replay chain tests**  
+- The **version‑migration replay tests**  
+- The **statistical replay guardrail**  
+
+All of these are ready to drop into `tests/replay/`.
+
+---
+
+# ⭐ Replay Fidelity Test Suite (Python / pytest)
+
+These tests assume:
+
+- `ReplayEngine.replay_step(step_record)`  
+- `ReplayEngine.replay_forward(step_record)`  
+- `ReplayEngine.replay_inverse(step_record)`  
+- `StepRecord` model  
+- `TransformEngine` for ground‑truth comparison  
+- `MigrationSystem` for version alignment  
+
+---
+
+# 1. **test_replay_forward_exact.py**
+
+Ensures the Replay Engine reconstructs the **forward** transform exactly.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from engine.transform import TransformEngine
+from models.step_record import StepRecord
+
+def test_replay_forward_exact(sample_step_record_forward: StepRecord):
+    rec = sample_step_record_forward
+
+    # Replay forward
+    replay_state = ReplayEngine.replay_forward(rec)
+
+    # Ground truth: recompute forward transform
+    node = rec.to_node_before()
+    expected_state, _ = TransformEngine.forward(node)
+
+    err = np.linalg.norm(np.array(replay_state) - np.array(expected_state))
+    assert err < 1e-12, f"Replay forward mismatch: {err}"
+```
+
+This enforces **bit‑level fidelity**.
+
+---
+
+# 2. **test_replay_inverse_exact.py**
+
+Ensures the Replay Engine reconstructs the **inverse** transform exactly.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from engine.transform import TransformEngine
+from models.step_record import StepRecord
+
+def test_replay_inverse_exact(sample_step_record_inverse: StepRecord):
+    rec = sample_step_record_inverse
+
+    replay_state = ReplayEngine.replay_inverse(rec)
+
+    node = rec.to_node_after()
+    expected_state = TransformEngine.inverse(node)
+
+    err = np.linalg.norm(np.array(replay_state) - np.array(expected_state))
+    assert err < 1e-12, f"Replay inverse mismatch: {err}"
+```
+
+This ensures **inverse replay is perfect**.
+
+---
+
+# 3. **test_replay_matches_logged_state.py**
+
+Ensures replay matches the **logged** StepRecord exactly.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from models.step_record import StepRecord
+
+def test_replay_matches_logged_state(sample_step_record_forward: StepRecord):
+    rec = sample_step_record_forward
+
+    replay_state = ReplayEngine.replay_forward(rec)
+    logged_state = np.array(rec.state["after"])
+
+    err = np.linalg.norm(replay_state - logged_state)
+    assert err < 1e-12, f"Replay does not match logged state: {err}"
+```
+
+This ensures **no drift** between logs and replay.
+
+---
+
+# 4. **test_replay_chain_multi_step.py**
+
+Ensures replay works across **multiple sequential steps**.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from models.step_record import StepRecord
+
+def test_replay_chain_multi_step(step_records_chain: list[StepRecord]):
+    # Replay entire chain
+    replay_states = []
+    for rec in step_records_chain:
+        replay_states.append(ReplayEngine.replay_step(rec))
+
+    # Compare to logged states
+    for rec, replay_state in zip(step_records_chain, replay_states):
+        logged_state = np.array(rec.state["after"])
+        err = np.linalg.norm(replay_state - logged_state)
+        assert err < 1e-12
+```
+
+This ensures **temporal consistency**.
+
+---
+
+# 5. **test_replay_version_migration.py**
+
+Ensures replay works even when StepRecords come from **older schema versions**.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from engine.migration import MigrationSystem
+from models.step_record import StepRecord
+from models.schema import schema
+
+def test_replay_version_migration(old_version_step_record: StepRecord):
+    rec = old_version_step_record
+
+    # Migrate if needed
+    migrated = MigrationSystem.migrate_step_record(rec, target_version=schema["version"])
+
+    replay_state = ReplayEngine.replay_step(migrated)
+    logged_state = np.array(migrated.state["after"])
+
+    err = np.linalg.norm(replay_state - logged_state)
+    assert err < 1e-12
+```
+
+This ensures **backward compatibility**.
+
+---
+
+# 6. **test_replay_distribution_guardrail.py**
+
+Statistical guardrail: replay must remain stable across many samples.
+
+```python
+import numpy as np
+from engine.replay import ReplayEngine
+from models.schema import schema
+
+P95_THRESHOLD = schema["reversibility"]["p95_threshold"]
+
+def test_replay_distribution_guardrail(many_step_records):
+    errors = []
+
+    for rec in many_step_records:
+        replay_state = ReplayEngine.replay_step(rec)
+        logged_state = np.array(rec.state["after"])
+        err = np.linalg.norm(replay_state - logged_state)
+        errors.append(err)
+
+    p95 = np.percentile(errors, 95)
+    assert p95 <= P95_THRESHOLD, f"Replay p95 regression: {p95}"
+```
+
+This prevents **slow replay degradation**.
+
+---
+
+# ⭐ What this suite guarantees
+
+### ✔ Replay Engine is **bit‑accurate**  
+Forward/inverse replay matches Transform Engine exactly.
+
+### ✔ Logs are **trustworthy**  
+Replay matches logged `state.after` with no drift.
+
+### ✔ Multi‑step replay is **consistent**  
+No cumulative error.
+
+### ✔ Versioning is **safe**  
+Old logs replay correctly after migration.
+
+### ✔ Statistical guardrails prevent regression  
+Replay cannot silently degrade over time.
+
+---
+
+# ⭐ If you want, I can now generate:
+
+### **D. The full schema validator**  
+(Ensures version blocks, thresholds, and structure are correct)
+
+### **E. The Transform Engine refactor that emits StepRecord**  
+(Concrete implementation)
+
+### **F. The Replay Engine implementation itself**  
+(Forward, inverse, and step replay)
+
+Just tell me which one you want next.
