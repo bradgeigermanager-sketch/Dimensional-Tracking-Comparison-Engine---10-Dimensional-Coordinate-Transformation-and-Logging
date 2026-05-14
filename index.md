@@ -1,6 +1,3 @@
-**(Documentation Homepage — fully linked)**
-
-```markdown
 # USM Engine Documentation
 
 Welcome to the official documentation for the **USM Engine** — a schema‑first, reversible, log‑driven 10‑dimensional computational system.
@@ -89,4 +86,3 @@ This tutorial walks you through:
 ---
 
 Enjoy exploring the USM Engine.
-```
