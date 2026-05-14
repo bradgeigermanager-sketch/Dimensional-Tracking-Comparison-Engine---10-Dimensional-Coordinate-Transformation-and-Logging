@@ -1,0 +1,33 @@
+{
+  "node_id": "Node_10D_Master",
+  "step_index": 42,
+  "direction": "forward",
+  "timestamps": {
+    "created_at": "2026-05-13T20:31:00Z"
+  },
+  "state": {
+    "before": [...],
+    "after": [...]
+  },
+  "inputs": {
+    "delta_axis": 3,
+    "delta_value": 0.5,
+    "matrix_snapshot": [...121...],
+    "entanglement_snapshot": [...]
+  },
+  "metrics": {
+    "duration_ms": 0.42,
+    "matrix_condition": 123.4,
+    "matrix_det": 0.98,
+    "entanglement_count": 3,
+    "state_norm_before": 1.2,
+    "state_norm_after": 1.5,
+    "reversible_error": 0.0003
+  },
+  "versions": {
+    "usm_schema_version": "1.4.0",
+    "manifest_version": 7,
+    "generator_version": "2.1.3",
+    "engine_version": "0.9.12"
+  }
+}
