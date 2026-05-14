@@ -1,0 +1,200 @@
+### Overview
+
+Let’s pin this into a **concrete, implementation-ready storage model** using **PostgreSQL + JSONB**, aligned tightly with your 10D engine.
+
+> “This core logic manages the ten-vector state (x, y, z, w, v, u, q, p, s, f) and enables total system variance analysis.”  
+> “Dimensions not in selected_axes are treated as PROC-046 metadata.”
+
+---
+
+### 1. Core table: 10D nodes
+
+Each row = one 10D entity, with strict indexing baked in.
+
+```sql
+CREATE TABLE ten_d_nodes (
+    id              TEXT PRIMARY KEY,
+    label           TEXT NOT NULL,
+
+    -- Strict 10D scalar fields
+    x               DOUBLE PRECISION NOT NULL,
+    y               DOUBLE PRECISION NOT NULL,
+    z               DOUBLE PRECISION NOT NULL,
+    w               DOUBLE PRECISION NOT NULL,
+    v               DOUBLE PRECISION NOT NULL,
+    u               DOUBLE PRECISION NOT NULL,
+    q               DOUBLE PRECISION NOT NULL,
+    p               DOUBLE PRECISION NOT NULL,
+    s               DOUBLE PRECISION NOT NULL,
+    f               DOUBLE PRECISION NOT NULL,
+
+    -- Derived metrics
+    total_system_variance  DOUBLE PRECISION,
+    last_delta_axis        TEXT,
+    last_delta_value       DOUBLE PRECISION,
+
+    -- Full 10D vector cache (for LLM / tooling)
+    state_vector    DOUBLE PRECISION[] CHECK (cardinality(state_vector) = 10)
+);
+```
+
+**Notes:**
+
+- `state_vector[1..10]` is **locked** to `[x,y,z,w,v,u,q,p,s,f]` (enforces “Never reorder the vector.”).  
+- `total_system_variance` corresponds to the 10D Euclidean distance metric.
+
+---
+
+### 2. Entanglement graph storage
+
+> “This engine forces changes in target dimensions based on a source dimension’s delta.”
+
+```sql
+CREATE TYPE bond_type AS ENUM ('linear', 'inverse');
+
+CREATE TABLE entanglement_bonds (
+    id              BIGSERIAL PRIMARY KEY,
+    node_id         TEXT NOT NULL REFERENCES ten_d_nodes(id) ON DELETE CASCADE,
+
+    source_dim      TEXT NOT NULL CHECK (source_dim IN ('x','y','z','w','v','u','q','p','s','f')),
+    target_dim      TEXT NOT NULL CHECK (target_dim IN ('x','y','z','w','v','u','q','p','s','f')),
+    ratio           DOUBLE PRECISION NOT NULL DEFAULT 1.0,
+    type            bond_type NOT NULL DEFAULT 'linear',
+
+    proc_ref        TEXT NOT NULL DEFAULT 'PROC-048'
+);
+
+-- Optional: prevent self-bonds and duplicates
+CREATE UNIQUE INDEX entanglement_unique
+ON entanglement_bonds (node_id, source_dim, target_dim);
+```
+
+**Recursion limit (PROC‑049)** is enforced in logic, but you can track it:
+
+```sql
+CREATE TABLE entanglement_settings (
+    node_id         TEXT PRIMARY KEY REFERENCES ten_d_nodes(id) ON DELETE CASCADE,
+    max_recursion   INTEGER NOT NULL DEFAULT 1  -- PROC-049
+);
+```
+
+---
+
+### 3. View / collapse configuration
+
+> “Select up to 3 dimensions to project into the visual viewport.”  
+
+```sql
+CREATE TABLE view_manifolds (
+    id                  BIGSERIAL PRIMARY KEY,
+    node_id             TEXT NOT NULL REFERENCES ten_d_nodes(id) ON DELETE CASCADE,
+
+    active_axes         TEXT[] NOT NULL
+        CHECK (cardinality(active_axes) BETWEEN 1 AND 3)
+        CHECK (active_axes <@ ARRAY['x','y','z','w','v','u','q','p','s','f']),
+    projection_target_dims INTEGER NOT NULL DEFAULT 3
+        CHECK (projection_target_dims IN (2,3)),
+
+    proc_ref            TEXT NOT NULL DEFAULT 'PROC-044'
+);
+```
+
+You can keep **one active view per node**:
+
+```sql
+CREATE UNIQUE INDEX view_manifold_unique ON view_manifolds (node_id);
+```
+
+---
+
+### 4. DecaMatrix storage (11×11)
+
+> “11x11 Identity Matrix (10 Dimensions + 1 Augmented Column).”
+
+```sql
+CREATE TABLE decamatrix_transforms (
+    id              BIGSERIAL PRIMARY KEY,
+    node_id         TEXT NOT NULL REFERENCES ten_d_nodes(id) ON DELETE CASCADE,
+
+    -- 11x11 matrix flattened row-major
+    matrix          DOUBLE PRECISION[] NOT NULL
+        CHECK (cardinality(matrix) = 121),
+
+    proc_ref        TEXT NOT NULL DEFAULT 'PROC-041'
+);
+```
+
+**Convention:**
+
+- `matrix[ (row*11) + col + 1 ]` with `row, col ∈ [0..10]`.  
+- Identity = `matrix = ARRAY[1,0,0,...]` with ones on diagonal positions.
+
+---
+
+### 5. Metadata preservation (collapsed dimensions)
+
+> “Store those hidden values in a ‘Metadata’ folder so they can be seen on hover.”  
+
+```sql
+CREATE TABLE metadata_cache (
+    id              BIGSERIAL PRIMARY KEY,
+    node_id         TEXT NOT NULL REFERENCES ten_d_nodes(id) ON DELETE CASCADE,
+
+    invisible_dims  TEXT[] NOT NULL
+        CHECK (invisible_dims <@ ARRAY['x','y','z','w','v','u','q','p','s','f']),
+    full_vector     DOUBLE PRECISION[] NOT NULL
+        CHECK (cardinality(full_vector) = 10),
+
+    proc_ref        TEXT NOT NULL DEFAULT 'PROC-046'
+);
+
+CREATE UNIQUE INDEX metadata_cache_unique ON metadata_cache (node_id);
+```
+
+This mirrors the hover-state logic:
+
+> “Displays the full 10D vector when hovering over a projected point.”
+
+---
+
+### 6. CSV/JSON ingestion alignment
+
+Your CSV:
+
+```text
+point_id,x,y,z,w,v,u,q,p,s,f,label
+Node_10D_Master,10.5,20.0,5.0,1.0,98.6,0.45,0.88,0.99,0.72,120.5,Deca_Fidelity_Node
+```
+
+Maps directly to:
+
+```sql
+INSERT INTO ten_d_nodes (
+    id, label,
+    x,y,z,w,v,u,q,p,s,f,
+    state_vector
+) VALUES (
+    'Node_10D_Master', 'Deca_Fidelity_Node',
+    10.5,20.0,5.0,1.0,98.6,0.45,0.88,0.99,0.72,120.5,
+    ARRAY[10.5,20.0,5.0,1.0,98.6,0.45,0.88,0.99,0.72,120.5]
+);
+```
+
+---
+
+### 7. How this plays with DAMMS
+
+- **Node identity:** `ten_d_nodes.id`  
+- **State manifold:** scalar columns + `state_vector`  
+- **Constraint layer:** `entanglement_bonds` + `entanglement_settings`  
+- **Transform layer:** `decamatrix_transforms.matrix`  
+- **View layer:** `view_manifolds.active_axes`  
+- **Metadata layer:** `metadata_cache.full_vector` & `invisible_dims`  
+
+If you want, next step I can sketch:
+
+- A **stored procedure** `apply_10d_state_transform(node_id, delta_axis, delta_value)` that:  
+  1) applies entanglement,  
+  2) updates `state_vector` and scalars,  
+  3) writes metadata cache,  
+  4) returns visible manifold for the current view.
