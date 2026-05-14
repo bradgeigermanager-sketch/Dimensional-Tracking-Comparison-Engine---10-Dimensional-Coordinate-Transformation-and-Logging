@@ -1,0 +1,153 @@
+Entanglement Bonds are one of the most **structurally important** and **behavior‑shaping** components in your entire 10‑dimensional engine. If the **DecaMatrix** is the physics operator, then **Entanglement Bonds** are the *cross‑dimensional constraints* that modify that physics in real time.
+
+They are the connective tissue — the rules that let one dimension influence another.
+
+Below is the full, precise explanation, written for you, Brad, and aligned with your DAMMS‑style architecture.
+
+---
+
+# **🧩 What Entanglement Bonds *are***  
+An **Entanglement Bond** is a **directed coupling** between two dimensions of a Ten‑D Node:
+
+- a **source dimension**  
+- a **target dimension**  
+- a **coupling ratio**  
+- a **bond type** (linear, resonant, inhibitory, etc.)
+
+They define how a change in one dimension **propagates** into another during a transform.
+
+They are *not* quantum entanglement — they are **structured cross‑dimensional influence rules**.
+
+---
+
+# **📐 Formal Structure of an Entanglement Bond**
+
+Each bond has the following fields:
+
+- **source_dim** — the dimension that emits influence  
+- **target_dim** — the dimension that receives influence  
+- **ratio** — how strong the influence is  
+- **type** — the mode of coupling (linear, resonant, inhibitory, etc.)  
+- **metadata** — optional parameters for nonlinear or custom behaviors  
+
+In JSON form:
+
+```json
+{
+  "source_dim": 3,
+  "target_dim": 7,
+  "ratio": 0.42,
+  "type": "linear"
+}
+```
+
+A node may have **zero**, **one**, or **many** bonds.
+
+---
+
+# **⚙️ What Entanglement Bonds *do***  
+They modify the **DecaMatrix** before each forward or inverse transform.
+
+This is the key:  
+**Entanglement is not applied after the transform — it is baked into the transform itself.**
+
+### ✔ 1. They inject cross‑dimensional influence  
+If dimension 3 changes, dimension 7 receives:
+
+\[
+\Delta x_7 = \text{ratio} \cdot \Delta x_3
+\]
+
+### ✔ 2. They alter the stability regime  
+Strong entanglement can:
+
+- amplify oscillations  
+- dampen motion  
+- create attractors  
+- induce chaos  
+
+### ✔ 3. They create emergent behavior  
+Multiple bonds can form:
+
+- chains  
+- loops  
+- resonant clusters  
+- inhibitory networks  
+
+This is where the system becomes *interesting*.
+
+---
+
+# **🔧 How Entanglement Bonds modify the DecaMatrix**
+
+For each bond:
+
+\[
+A[target, source] \mathrel{+}= \text{ratio}
+\]
+
+This means:
+
+- the DecaMatrix is **dynamically rewritten** each step  
+- the transform engine becomes **context‑sensitive**  
+- replay remains deterministic because bonds are logged  
+
+This is why the **Input Log** stores entanglement snapshots.
+
+---
+
+# **📊 How Entanglement Bonds appear in the database**
+
+A typical SQL representation:
+
+```sql
+CREATE TABLE entanglement_bonds (
+    node_id TEXT,
+    source_dim INT,
+    target_dim INT,
+    ratio DOUBLE PRECISION,
+    type TEXT,
+    metadata JSONB
+);
+```
+
+This makes them:
+
+- queryable  
+- exportable  
+- replay‑safe  
+
+---
+
+# **🧠 How Entanglement Bonds interact with the system**
+
+| Subsystem | Role of Entanglement Bonds |
+|----------|-----------------------------|
+| **Transform Engine** | Inject cross‑dimensional coupling into the DecaMatrix |
+| **Metrics Layer** | Counts bonds, computes Δ‑sum |
+| **Replay Engine** | Restores exact bond state at each step |
+| **Visualizer** | Shows entanglement‑driven distortions |
+| **Differential Analyzer** | Detects entanglement‑induced Δ‑patterns |
+| **Testing Suite** | Validates propagation and rewind behavior |
+
+They are a **first‑class citizen** in the engine.
+
+---
+
+# **🎯 Summary (the essence)**
+
+An **Entanglement Bond** is:
+
+> **A directed, ratio‑weighted coupling between dimensions that dynamically rewrites the DecaMatrix and governs how changes propagate across the 10‑dimensional state space.**
+
+They are the **cross‑dimensional rules** that give your engine its emergent behavior.
+
+---
+
+If you want, I can now explain:
+
+- **View Manifold**  
+- **Coordinate Log**  
+- **Metrics Log**  
+
+Which one should we dive into next?
