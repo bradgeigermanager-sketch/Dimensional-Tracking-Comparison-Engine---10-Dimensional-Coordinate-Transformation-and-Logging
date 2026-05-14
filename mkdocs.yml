@@ -1,6 +1,3 @@
-**(Full MkDocs configuration — ready to build a docs website)**
-
-```yaml
 site_name: USM Engine Documentation
 site_description: Schema-first, reversible, log-driven 10D computational engine
 site_author: Your Name
@@ -38,4 +35,3 @@ markdown_extensions:
   - footnotes
   - tables
   - attr_list
-```
