@@ -1,0 +1,139 @@
+The **3D Attractor View** is the subsystem that lets you *see the soul* of your 10‑dimensional engine — the deep geometric structure that emerges when high‑dimensional trajectories are projected into a **3‑dimensional manifold**.  
+It is the closest thing your system has to a **phase‑space portrait**, revealing stability, chaos, resonance, drift, and entanglement patterns as **living geometry**.
+
+---
+
+## **🌌 What the 3D Attractor View *is***  
+A **rotatable, animated, PCA‑3D projection** of a Ten‑D Node’s trajectory, rendered as a continuous curve or point cloud.
+
+It shows:
+
+- global structure of motion  
+- attractors and basins  
+- chaotic regions  
+- entanglement‑driven distortions  
+- stability vs drift  
+- resonance loops  
+
+It is the **geometric fingerprint** of the node’s dynamics.
+
+
+
+---
+
+## **🧩 How the 3D Attractor View is constructed**
+
+### **1. Extract the full trajectory**
+Pulled from the **Coordinate Log**:
+
+\[
+x_0, x_1, x_2, \ldots, x_N
+\]
+
+Each \(x_i\) is a 10‑dimensional vector.
+
+---
+
+### **2. Apply PCA‑3D**
+The **Projection Modes** subsystem computes:
+
+\[
+X_{3D} = \text{PCA}_{3D}(X_{10D})
+\]
+
+This yields:
+
+- PC1  
+- PC2  
+- PC3  
+
+These become the **X/Y/Z axes** of the attractor.
+
+---
+
+### **3. Render as a 3D trajectory**
+The visualizer draws:
+
+- a continuous curve  
+- colored by step index  
+- optionally colored by Δ‑norm  
+- optionally colored by reversible error  
+
+This reveals:
+
+- spirals  
+- loops  
+- chaotic clouds  
+- stable orbits  
+- entanglement‑driven distortions  
+
+---
+
+### **4. Animate rotation**
+A rotating camera sweeps around the attractor:
+
+- azimuth sweep  
+- elevation sweep  
+- smooth interpolation  
+
+This exposes structure that is invisible from a single viewpoint.
+
+---
+
+## **🎛️ What the 3D Attractor View reveals**
+
+### **1. Stability vs Chaos**
+Stable systems → smooth, tight curves  
+Chaotic systems → fuzzy, expanding clouds  
+
+### **2. Entanglement Patterns**
+Strong bonds → twisted, braided geometry  
+Resonant bonds → oscillatory loops  
+Inhibitory bonds → flattened regions  
+
+### **3. Drift & Blow‑Up**
+Drift → slow outward spiral  
+Blow‑up → rapid expansion of the attractor  
+
+### **4. Regime Transitions**
+You can *see* when the system:
+
+- enters chaos  
+- stabilizes  
+- resonates  
+- collapses  
+
+---
+
+## **📊 How the 3D Attractor View integrates with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Projection Modes** | Provides PCA‑3D coordinates |
+| **Interactive Visualizer** | Renders the attractor |
+| **Coordinate Log** | Supplies the trajectory |
+| **Metrics Log** | Provides stability overlays |
+| **Differential Analyzer** | Provides Δ‑norm coloring |
+| **Replay Engine** | Enables step‑accurate animation |
+
+The attractor view is the **global geometry layer** of the engine.
+
+---
+
+## **🎯 Summary (the essence)**
+
+The **3D Attractor View** is:
+
+> **A rotating PCA‑3D projection of a Ten‑D Node’s trajectory that reveals stability, chaos, entanglement patterns, and global dynamical structure as interpretable geometry.**
+
+It is the **phase‑space portrait** of your 10‑dimensional system.
+
+---
+
+If you want, we can continue with:
+
+- **Engine Client**  
+- **Real‑Time Monitoring**  
+- **Schema‑Driven Code Generator**  
+
+Which subsystem should we explore next?
