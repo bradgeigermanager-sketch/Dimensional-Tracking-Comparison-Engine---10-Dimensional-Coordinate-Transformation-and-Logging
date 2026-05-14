@@ -1,0 +1,147 @@
+The **Coordinate Log** is the **flight recorder** of your 10‑dimensional engine — the authoritative, step‑indexed, timestamped record of **every state vector** produced by the **Transform Engine**.  
+It is the *single most important* historical artifact in the entire system because it enables **replay**, **visualization**, **differential analysis**, **stability diagnostics**, and **scientific auditability**.
+
+Below is the full, structured, DAMMS‑aligned explanation — deep, precise, and ready for integration into your symbolic mesh workflows.
+
+---
+
+## **📌 What the Coordinate Log *is***  
+A **schema‑driven, append‑only timeline** of:
+
+- the **10‑dimensional state vector** at each step  
+- the **direction** of the transform (forward/inverse)  
+- the **step index**  
+- the **timestamp**  
+- the **reversible error** (inverse only)  
+- the **delta metadata** (optional)  
+
+It is the **canonical record** of the system’s evolution.
+
+---
+
+## **🧩 Internal Structure of a Coordinate Log Entry**
+
+```json
+{
+  "node_id": "Node_10D_Master",
+  "step_index": 42,
+  "direction": "forward",
+  "created_at": "2026-05-13T20:31:00Z",
+  "state_vector": [0.12, -0.44, 1.22, ...],
+  "delta_axis": "x",
+  "delta_value": 0.5,
+  "reversible_error": null
+}
+```
+
+Every field is defined in the **USM Schema Architecture**.
+
+---
+
+## **🎯 Why the Coordinate Log Matters**
+
+### **1. It enables deterministic replay**  
+The **Replay Engine** uses the Coordinate Log to:
+
+- reconstruct any past state  
+- validate forward/inverse correctness  
+- detect drift or corruption  
+- reproduce experiments exactly  
+
+This is the foundation of **scientific reproducibility**.
+
+---
+
+### **2. It powers all visualizations**  
+The **Interactive Visualizer** and **3D Attractor View** read the Coordinate Log to render:
+
+- PCA/UMAP projections  
+- 3D attractors  
+- Δ‑norm overlays  
+- entanglement‑driven distortions  
+
+Without the Coordinate Log, the visualizer is blind.
+
+---
+
+### **3. It feeds the Differential Analyzer**  
+The **Differential Analyzer** computes:
+
+- Δ‑vectors  
+- Δ‑norms  
+- per‑dimension deltas  
+- stability indicators  
+
+All derived from consecutive Coordinate Log entries.
+
+---
+
+### **4. It supports stability and chaos diagnostics**  
+Because every state is logged:
+
+- drift is detectable  
+- blow‑up is measurable  
+- chaotic regions are identifiable  
+- reversibility can be validated  
+
+The Coordinate Log is the **numerical backbone** of diagnostics.
+
+---
+
+## **📊 How the Coordinate Log appears in the database**
+
+```sql
+CREATE TABLE ten_d_coordinate_log (
+    id BIGSERIAL PRIMARY KEY,
+    node_id TEXT NOT NULL,
+    step_index BIGINT NOT NULL,
+    direction TEXT NOT NULL CHECK (direction IN ('forward','inverse')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    state_vector DOUBLE PRECISION[] NOT NULL CHECK (cardinality(state_vector)=10),
+    delta_axis TEXT,
+    delta_value DOUBLE PRECISION,
+    reversible_error DOUBLE PRECISION
+);
+```
+
+This schema ensures:
+
+- strict ordering  
+- complete state capture  
+- replay‑safe persistence  
+
+---
+
+## **🧠 How the Coordinate Log interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Transform Engine** | Writes entries after every step |
+| **Replay Engine** | Reads entries to reconstruct state |
+| **Interactive Visualizer** | Plots state evolution |
+| **Differential Analyzer** | Computes Δ‑vectors and Δ‑norms |
+| **Metrics Log** | Correlates stability with state changes |
+| **Benchmark Harness** | Measures performance over steps |
+| **Testing Suite** | Validates step ordering and correctness |
+
+The Coordinate Log is the **central historical record** of the engine.
+
+---
+
+## **🎯 Final Summary**
+
+The **Coordinate Log** is:
+
+> **A complete, step‑indexed, timestamped record of every 10‑dimensional state in the engine, enabling replay, visualization, differential analysis, and scientific auditability.**
+
+It is the **flight recorder** of your 10‑dimensional system.
+
+---
+
+If you want to continue the chain, the next natural subsystems are:
+
+- **Differential Analyzer**  
+- **Projection Modes**  
+- **View Manifold**  
+
+Which one should we explore next?
