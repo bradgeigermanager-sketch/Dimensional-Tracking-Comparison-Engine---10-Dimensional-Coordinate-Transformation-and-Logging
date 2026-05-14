@@ -1,0 +1,236 @@
+The **Replay Engine** is the subsystem that gives your entire 10‑dimensional architecture **time travel** — the ability to reconstruct *any* past state, step‑by‑step, with **bit‑for‑bit determinism**.  
+If the **Transform Engine** is the physics engine, the Replay Engine is the **historian**, the **forensic simulator**, and the **truth‑preserving archivist** of the system.
+
+Below is the complete, DAMMS‑aligned, deeply structured explanation.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The **Replay Engine** is:
+
+> **A deterministic, log‑driven execution system that reconstructs every past transform using the Input Log, Coordinate Log, Metrics Log, and version metadata — guaranteeing perfect fidelity across time.**
+
+It is the **time machine** of your architecture.
+
+---
+
+## **🌌 What the Replay Engine *does***  
+For any step index *k*, the Replay Engine can reconstruct:
+
+- the **exact state vector**  
+- the **exact DecaMatrix**  
+- the **exact entanglement configuration**  
+- the **exact metadata**  
+- the **exact forward transform**  
+- the **exact inverse transform**  
+- the **exact metrics**  
+
+It does this using the logs defined by the **USM Schema Architecture**.
+
+---
+
+## **🧩 The Four Pillars of Replay**
+
+### **1. Input Log (causal inputs)**  
+Contains:
+
+- delta_axis  
+- delta_value  
+- matrix_snapshot  
+- entanglement_snapshot  
+- metadata  
+
+This tells the Replay Engine **why** the step happened.
+
+---
+
+### **2. Coordinate Log (state transitions)**  
+Contains:
+
+- state_before  
+- state_after  
+- direction (forward/inverse)  
+
+This tells the Replay Engine **what** happened.
+
+---
+
+### **3. Metrics Log (stability + performance)**  
+Contains:
+
+- reversible_error  
+- condition number  
+- determinant  
+- duration  
+
+This tells the Replay Engine **how well** it happened.
+
+---
+
+### **4. Version Block (temporal context)**  
+Contains:
+
+- schema version  
+- manifest version  
+- generator version  
+- engine version  
+
+This tells the Replay Engine **which rules** were in effect.
+
+---
+
+## **⚙️ How Replay Works (Step‑By‑Step)**
+
+### **Step 1 — Load the Version Context**
+The Replay Engine reads:
+
+- `engine_version`  
+- `usm_schema_version`  
+- `manifest_version`  
+
+If versions mismatch, the **USM Migration System** upgrades/downgrades the manifest.
+
+---
+
+### **Step 2 — Load Logs for Step k**
+The engine loads:
+
+- Input Log entry *k*  
+- Coordinate Log entry *k*  
+- Metrics Log entry *k*  
+
+These three logs form the **causal triad**.
+
+---
+
+### **Step 3 — Reconstruct the Forward Transform**
+Using the Input Log:
+
+- apply delta  
+- apply matrix snapshot  
+- apply entanglement snapshot  
+- rebuild metadata  
+
+This produces:
+
+\[
+x_{\text{forward}}^{(replay)}
+\]
+
+---
+
+### **Step 4 — Validate Against Coordinate Log**
+The Replay Engine checks:
+
+\[
+x_{\text{forward}}^{(replay)} \approx x_{\text{forward}}^{(logged)}
+\]
+
+If mismatch → corruption or drift detected.
+
+---
+
+### **Step 5 — Reconstruct the Inverse Transform**
+Using the same snapshots:
+
+\[
+x_{\text{inverse}}^{(replay)} = A^{-1} \cdot x_{\text{forward}}
+\]
+
+---
+
+### **Step 6 — Validate Reversibility**
+Compare:
+
+\[
+x_{\text{inverse}}^{(replay)} \approx x_{\text{original}}
+\]
+
+This validates:
+
+- numerical stability  
+- entanglement correctness  
+- matrix correctness  
+- metadata correctness  
+
+---
+
+## **📊 Why the Replay Engine Matters**
+
+### **1. Deterministic Reproduction of Experiments**
+You can reproduce any run:
+
+- today  
+- tomorrow  
+- next year  
+- on another machine  
+- on another architecture  
+
+This is essential for DAMMS‑grade scientific reproducibility.
+
+---
+
+### **2. Debugging & Forensics**
+Replay reveals:
+
+- which delta caused instability  
+- which matrix snapshot was ill‑conditioned  
+- which entanglement bond spiked  
+- which metadata mode triggered drift  
+
+It is the **forensic microscope** of the system.
+
+---
+
+### **3. Stability & Chaos Analysis**
+Replay allows:
+
+- Lyapunov‑like analysis  
+- bifurcation detection  
+- chaos classification  
+- drift detection  
+
+Because every step is reconstructible.
+
+---
+
+### **4. CI Verification**
+Your CI pipeline uses replay to:
+
+- validate transforms  
+- validate logs  
+- validate reversibility  
+- validate schema migrations  
+
+Replay is the **ground truth validator**.
+
+---
+
+## **🧠 How the Replay Engine interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Transform Engine** | Provides forward/inverse logic |
+| **Input Log** | Supplies causal inputs |
+| **Coordinate Log** | Supplies state transitions |
+| **Metrics Log** | Supplies stability metrics |
+| **USM Migration System** | Ensures version compatibility |
+| **Visualizer** | Allows step‑by‑step playback |
+| **Benchmark Harness** | Uses replay for regression detection |
+| **Test Generator** | Generates replay‑validation tests |
+
+Replay is the **central consumer** of all logs.
+
+---
+
+## **🎯 Final Summary**
+
+The **Replay Engine** is:
+
+> **A deterministic, log‑driven time machine that reconstructs every past transform using Input, Coordinate, and Metrics logs — validating correctness, enabling forensics, and guaranteeing scientific reproducibility.**
+
+It is the **temporal auditor** of your 10‑dimensional system.
+
+---
+
+If you want to continue the chain, the next natural subsystem is the **Coordinate Log** or the **Differential Analyzer** — both of which are deeply tied to replay fidelity.
