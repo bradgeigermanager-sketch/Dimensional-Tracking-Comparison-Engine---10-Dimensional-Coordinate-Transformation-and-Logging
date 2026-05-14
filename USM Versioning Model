@@ -1,0 +1,203 @@
+The **USM Versioning Model** is the *time‑axis* of your entire schema‑first architecture — the formal system that governs how the **Unified System Manifest (USM)** evolves, how breaking changes are controlled, how compatibility is preserved, and how every downstream artifact (code, docs, tests, logs, clients) stays in perfect lockstep with the schema.
+
+It is the **temporal backbone** of the USM ecosystem.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The USM Versioning Model is:
+
+> **A deterministic, multi‑layered versioning system that tracks schema evolution, enforces compatibility rules, and guarantees reproducibility across all generated artifacts.**
+
+It ensures that *every* version of your engine is reconstructible, replayable, and auditable.
+
+---
+
+## **🧩 The Four‑Layer Versioning Stack**
+
+The USM Versioning Model is built on **four coordinated version layers**, each with a distinct purpose.
+
+---
+
+### **1. Schema Version (SV)**  
+The **canonical version** of the USM JSON Schema.
+
+- Incremented when the schema changes  
+- Drives regeneration of code, docs, tests  
+- Stored in the schema file itself  
+- Used by CI to detect drift  
+
+Example:  
+```
+"usm_schema_version": "1.4.0"
+```
+
+This is the **root of truth**.
+
+---
+
+### **2. Manifest Version (MV)**  
+The version of a *specific manifest instance* (e.g., a Ten‑D Node or log entry).
+
+- Stored inside each manifest  
+- Allows replay engines to reconstruct historical states  
+- Ensures old logs remain valid even after schema updates  
+
+Example:  
+```
+"manifest_version": 7
+```
+
+This is the **historical fingerprint**.
+
+---
+
+### **3. Generator Version (GV)**  
+The version of the **Schema‑Driven Code Generator**, Docs Generator, and Test Generator.
+
+- Ensures deterministic regeneration  
+- Allows CI to detect generator drift  
+- Guarantees reproducibility across machines  
+
+Example:  
+```
+"generator_version": "2.1.3"
+```
+
+This is the **compiler version**.
+
+---
+
+### **4. Engine Version (EV)**  
+The version of the runtime engine itself.
+
+- Tracks transform logic  
+- Tracks reversible execution logic  
+- Tracks entanglement propagation rules  
+- Tracks DecaMatrix construction logic  
+
+Example:  
+```
+"engine_version": "0.9.12"
+```
+
+This is the **physics version**.
+
+---
+
+## **📐 How the Four Versions Interact**
+
+| Layer | Purpose | Stored In | Affects |
+|------|---------|-----------|---------|
+| **Schema Version (SV)** | Defines structure | Schema file | Code, docs, tests |
+| **Manifest Version (MV)** | Captures instance history | Every manifest | Replay, logs |
+| **Generator Version (GV)** | Ensures deterministic builds | Generated artifacts | CI, regeneration |
+| **Engine Version (EV)** | Defines runtime behavior | Engine metadata | Transforms, reversibility |
+
+Together, they form a **complete temporal model** of the system.
+
+---
+
+## **🧠 Why the Versioning Model Matters**
+
+### **1. Reproducibility**
+You can reconstruct *any* past state because:
+
+- the manifest version tells you which schema to use  
+- the schema version tells you which code to regenerate  
+- the generator version ensures deterministic output  
+- the engine version ensures correct transform semantics  
+
+This is essential for DAMMS‑style auditability.
+
+---
+
+### **2. Zero‑Drift Guarantees**
+CI enforces:
+
+- schema drift detection  
+- generator drift detection  
+- manifest drift detection  
+
+This ensures the system is **self‑healing**.
+
+---
+
+### **3. Backward Compatibility**
+The versioning model supports:
+
+- schema migrations  
+- manifest migrations  
+- engine behavior migrations  
+
+All controlled, explicit, and reversible.
+
+---
+
+### **4. Replay Safety**
+Replay engines use:
+
+- MV to load the correct manifest format  
+- SV to validate structure  
+- EV to apply the correct transform logic  
+
+This guarantees **bit‑for‑bit deterministic replay**.
+
+---
+
+## **📦 Example Version Block (Canonical)**
+
+```json
+{
+  "usm_schema_version": "1.4.0",
+  "manifest_version": 7,
+  "generator_version": "2.1.3",
+  "engine_version": "0.9.12"
+}
+```
+
+This block appears in:
+
+- Ten‑D Nodes  
+- log entries  
+- exports  
+- benchmarks  
+- replay bundles  
+
+It is the **temporal signature** of the system.
+
+---
+
+## **🎛️ How the Versioning Model integrates with the system**
+
+| Subsystem | How it uses the Versioning Model |
+|----------|----------------------------------|
+| **Schema‑Driven Code Generator** | Regenerates code based on SV |
+| **Docs Generator** | Regenerates docs based on SV |
+| **Test Generator** | Regenerates tests based on SV |
+| **Replay Engine** | Uses MV + EV to reconstruct behavior |
+| **Transform Engine** | Uses EV to apply correct physics |
+| **CI Pipeline** | Enforces version consistency |
+| **Benchmark Harness** | Records EV for reproducibility |
+
+The versioning model is the **time‑axis contract** of the architecture.
+
+---
+
+## **🎯 Final Summary**
+
+The **USM Versioning Model** is:
+
+> **A four‑layer versioning system (Schema, Manifest, Generator, Engine) that ensures deterministic regeneration, backward compatibility, replay safety, and audit‑grade reproducibility across the entire 10‑dimensional engine.**
+
+It is the **temporal architecture** that keeps your system coherent across time.
+
+---
+
+If you want, we can continue with:
+
+- **Schema‑Driven Test Generator**  
+- **Graphviz Dependency Graph**  
+- **USM Migration System**  
+
+Which subsystem should we explore next?
