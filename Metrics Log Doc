@@ -1,0 +1,138 @@
+The **Metrics Log** is the subsystem that turns your 10‑dimensional engine from a mysterious black box into a **measurable, diagnosable, stability‑aware computational system**.  
+If the **Input Log** captures *why* a step happened and the **Coordinate Log** captures *what* happened, the Metrics Log captures **how well** it happened — the numerical health of every transform.
+
+---
+
+## **🔎 What the Metrics Log *is***  
+A **step‑indexed telemetry record** containing all quantitative measurements produced during a forward or inverse transform, including:
+
+- execution time  
+- matrix stability  
+- entanglement activity  
+- state norms  
+- reversible error  
+
+It is the **instrument panel** of the engine.
+
+---
+
+## **📐 Internal Structure of a Metrics Log Entry**
+
+Each entry contains fields defined in the **USM Schema Architecture**:
+
+- **step_index** — aligns with Input + Coordinate logs  
+- **duration_ms** — forward/inverse execution time  
+- **matrix_condition** — condition number of the DecaMatrix  
+- **matrix_det** — determinant  
+- **entanglement_count** — number of active bonds  
+- **entanglement_delta_sum** — total influence injected  
+- **state_norm_before** — ‖x‖ before transform  
+- **state_norm_after** — ‖x′‖ after transform  
+- **reversible_error** — ‖x_inv − x‖ (inverse only)  
+
+This is the **quantitative fingerprint** of each step.
+
+---
+
+## **📊 What the Metrics Log *does***  
+
+### **1. Measures performance**
+The engine logs:
+
+- forward duration  
+- inverse duration  
+- reversible duration  
+
+This powers:
+
+- benchmarking  
+- latency dashboards  
+- performance regression detection  
+
+---
+
+### **2. Tracks numerical stability**
+The Metrics Log captures:
+
+- matrix condition number  
+- determinant  
+- state norms  
+
+These reveal:
+
+- near‑singular transforms  
+- unstable regions  
+- chaotic regimes  
+- drift or blow‑up  
+
+This is essential for stability classification.
+
+---
+
+### **3. Quantifies entanglement behavior**
+The log records:
+
+- number of active bonds  
+- total entanglement influence (Δ‑sum)  
+
+This allows you to detect:
+
+- entanglement spikes  
+- resonance loops  
+- inhibitory cascades  
+
+---
+
+### **4. Measures reversibility**
+For inverse transforms:
+
+\[
+\text{reversible\_error} = \|x_{\text{inv}} - x_{\text{orig}}\|
+\]
+
+Low error → stable  
+High error → chaotic or ill‑conditioned  
+
+This is the **core chaos indicator**.
+
+---
+
+### **5. Powers dashboards and monitoring**
+The Metrics Log feeds the **Grafana Dashboard**:
+
+- latency  
+- stability  
+- reversibility  
+- entanglement activity  
+- Δ‑norm overlays  
+
+It is the **telemetry backbone** of the system.
+
+---
+
+## **🧠 How the Metrics Log interacts with the architecture**
+
+| Subsystem | Role |
+|----------|------|
+| **Transform Engine** | Produces metrics per step |
+| **Differential Analyzer** | Correlates Δ‑norms with stability metrics |
+| **Replay Engine** | Validates correctness of transforms |
+| **Benchmark Harness** | Computes summary statistics |
+| **Visualization Suite** | Overlays metrics on trajectories |
+| **Schema‑Driven Test Generator** | Validates metrics correctness |
+
+The Metrics Log is the **quantitative truth source** for the entire engine.
+
+---
+
+## **🎯 Final Summary**
+
+The **Metrics Log** is:
+
+> **A complete numerical telemetry record for each transform, capturing performance, stability, entanglement behavior, and reversibility — enabling dashboards, diagnostics, replay, and scientific auditability.**
+
+It is the **instrument panel** of your 10‑dimensional system.
+
+---
+
+If you want to continue the chain, the next natural subsystem is the **Reversible Execution** layer — the mechanism that makes the Metrics Log’s stability metrics meaningful.
