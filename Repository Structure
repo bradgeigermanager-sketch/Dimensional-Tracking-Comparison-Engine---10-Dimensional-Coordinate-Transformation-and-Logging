@@ -1,0 +1,45 @@
+## **📁 Repository Structure**
+
+```
+usm-engine/
+├─ README.md
+├─ pyproject.toml
+├─ LICENSE
+├─ docs/
+│  ├─ architecture.md
+│  ├─ schema.md
+│  ├─ logs.md
+│  ├─ transform.md
+│  ├─ replay.md
+│  ├─ differential.md
+│  ├─ view_manifold.md
+│  └─ versioning.md
+├─ usm/
+│  ├─ __init__.py
+│  ├─ schema/
+│  │  ├─ usm_schema.json
+│  │  └─ __init__.py
+│  ├─ core/
+│  │  ├─ models.py
+│  │  ├─ versioning.py
+│  │  ├─ migration.py
+│  │  ├─ compatibility.py
+│  │  └─ logging_models.py
+│  ├─ engine/
+│  │  ├─ transform_engine.py
+│  │  ├─ reversible_execution.py
+│  │  ├─ replay_engine.py
+│  │  └─ differential_analyzer.py
+│  ├─ view/
+│  │  ├─ view_manifold.py
+│  │  └─ projections.py
+│  ├─ graph/
+│  │  └─ dependency_graph.dot
+│  └─ tests/
+│     ├─ test_tendnode_structure.py
+│     ├─ test_transform_roundtrip.py
+│     ├─ test_replay_engine.py
+│     └─ test_differential_analyzer.py
+└─ scripts/
+   └─ generate_graphviz.py
+```
