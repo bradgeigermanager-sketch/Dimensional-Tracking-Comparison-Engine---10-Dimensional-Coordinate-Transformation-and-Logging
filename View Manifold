@@ -1,0 +1,173 @@
+The **View Manifold** is the part of your 10‑dimensional engine that determines *how a Ten‑D Node is seen, interpreted, and interacted with* by every subsystem — the visualizer, the dashboard, the replay engine, the differential analyzer, and even the transform engine itself.
+
+It is the **lens** through which the raw 10‑dimensional state becomes *meaningful structure*.
+
+
+
+---
+
+# **📐 What the View Manifold *is***  
+A **View Manifold** is a structured mapping that separates a node’s internal 10‑D state into:
+
+- **visible axes** (dimensions exposed to the user or visualizer)  
+- **hidden axes** (internal or metadata dimensions)  
+- **derived axes** (computed projections, norms, deltas, PCA/UMAP components)  
+- **semantic labels** (names, roles, categories for each dimension)  
+
+It is the **interpretation layer** of the node.
+
+Where the **DecaMatrix** governs *how the node evolves*,  
+the **View Manifold** governs *how the node is understood*.
+
+---
+
+# **🧩 Internal Structure of the View Manifold**
+
+A View Manifold typically contains:
+
+- **visible_dims** — which of the 10 dimensions are shown  
+- **hidden_dims** — which are internal  
+- **labels** — human‑readable names for each dimension  
+- **projections** — PCA/UMAP/linear projections  
+- **metadata** — arbitrary structured annotations  
+
+In JSON form:
+
+```json
+{
+  "visible_dims": [0, 1, 2],
+  "hidden_dims": [3, 4, 5, 6, 7, 8, 9],
+  "labels": {
+    "0": "X-axis",
+    "1": "Y-axis",
+    "2": "Z-axis"
+  },
+  "projections": {
+    "pca_2d": [0.12, -0.44],
+    "umap_2d": [1.22, 0.88]
+  },
+  "metadata": {
+    "cluster": "A",
+    "role": "primary"
+  }
+}
+```
+
+This is what the visualizer, dashboard, and analyzer consume.
+
+---
+
+# **🎛️ What the View Manifold *does***  
+
+## **1. Controls what the user sees**
+The manifold determines:
+
+- which dimensions appear in the interactive visualizer  
+- which dimensions are plotted in the dashboard  
+- which axes are available for selection  
+
+This is why the visualizer can toggle dimensions instantly.
+
+---
+
+## **2. Provides semantic meaning**
+Dimensions can be labeled:
+
+- “velocity_x”  
+- “pressure”  
+- “latent_3”  
+- “entropy”  
+
+This allows the system to treat dimensions *as concepts*, not just numbers.
+
+---
+
+## **3. Stores projection modes**
+The manifold holds:
+
+- PCA‑2D  
+- PCA‑3D  
+- UMAP‑2D  
+- custom projections  
+
+These are used by:
+
+- the projection visualizer  
+- the 3D attractor view  
+- the dashboard  
+
+---
+
+## **4. Enables metadata‑driven transforms**
+Some transforms depend on:
+
+- dimension roles  
+- visibility  
+- metadata flags  
+
+The View Manifold provides this context.
+
+---
+
+## **5. Supports replay and export**
+Because the manifold is logged:
+
+- every visualization is reproducible  
+- every projection is deterministic  
+- every export is consistent  
+
+This is essential for scientific reproducibility.
+
+---
+
+# **📊 How the View Manifold appears in the database**
+
+```sql
+metadata JSONB
+```
+
+This field contains the entire manifold.
+
+It is:
+
+- schema‑free  
+- version‑tolerant  
+- replay‑safe  
+- export‑friendly  
+
+---
+
+# **🧠 How the View Manifold interacts with the system**
+
+| Subsystem | How it uses the View Manifold |
+|----------|--------------------------------|
+| **Interactive Visualizer** | Determines which axes to show |
+| **Projection Modes** | Stores PCA/UMAP results |
+| **3D Attractor View** | Uses PCA‑3D from the manifold |
+| **Dashboard** | Uses labels + visible dims |
+| **Differential Analyzer** | Uses dimension roles |
+| **Replay Engine** | Restores manifold per step |
+| **Export Pipelines** | Includes manifold metadata |
+| **Testing Suite** | Validates manifold consistency |
+
+The manifold is the **interpretation contract** for the node.
+
+---
+
+# **🎯 Summary (the essence)**
+
+A **View Manifold** is:
+
+> **A structured interpretation layer that defines how a Ten‑D Node’s 10‑dimensional state is viewed, labeled, projected, and understood across all visualization, analysis, and replay systems.**
+
+It is the **semantic interface** of the engine.
+
+---
+
+If you want, I can now explain:
+
+- **Coordinate Log**  
+- **Metrics Log**  
+- **Reversible Execution**  
+
+Which one should we explore next?
