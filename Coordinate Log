@@ -1,0 +1,167 @@
+The **Coordinate Log** is the *flight recorder* of your 10‑dimensional engine — the subsystem that captures **every state**, **every transform**, **every reversible step**, and **every numerical detail** needed to replay, audit, visualize, or diagnose the system at any point in time.
+
+It is the most important persistence layer in the entire architecture because it guarantees **determinism**, **reproducibility**, and **scientific auditability**.
+
+---
+
+# **📌 What the Coordinate Log *is***  
+A **step‑indexed, timestamped, full‑state history** of a Ten‑D Node.
+
+Every time the engine performs a:
+
+- **forward transform**  
+- **inverse transform**  
+- **reversible execution step**  
+
+…the Coordinate Log records:
+
+- the **full 10‑dimensional state vector**  
+- the **step index** (monotonic per node)  
+- the **timestamp**  
+- the **direction** (forward/inverse)  
+- the **reversible error** (inverse only)  
+- the **delta applied** (optional)  
+
+It is the **authoritative timeline** of the node’s evolution.
+
+---
+
+# **📐 Internal Structure of a Coordinate Log Entry**
+
+Each entry contains:
+
+- **step_index** — strictly increasing per node  
+- **created_at** — real‑time timestamp  
+- **direction** — `"forward"` or `"inverse"`  
+- **state_vector** — the full 10D vector at that moment  
+- **delta_axis** — which dimension was changed (optional)  
+- **delta_value** — how much it changed (optional)  
+- **reversible_error** — ||x_inv − x|| (inverse only)  
+
+In JSON form:
+
+```json
+{
+  "node_id": "Node_10D_Master",
+  "step_index": 42,
+  "direction": "forward",
+  "created_at": "2026-05-13T20:31:00Z",
+  "state_vector": [0.12, -0.44, 1.22, ...],
+  "delta_axis": "x",
+  "delta_value": 0.5,
+  "reversible_error": null
+}
+```
+
+This is the **canonical snapshot** of the system at that step.
+
+---
+
+# **⚙️ What the Coordinate Log *does***  
+
+## **1. Enables full replay**
+The Replay Engine uses the Coordinate Log to:
+
+- reconstruct any past state  
+- replay the entire trajectory  
+- validate forward/inverse correctness  
+- debug entanglement propagation  
+
+This is why every step is logged.
+
+---
+
+## **2. Powers all visualizations**
+The visualizer reads the Coordinate Log to produce:
+
+- dimension plots  
+- norm trajectories  
+- Δ‑norm charts  
+- PCA/UMAP projections  
+- 3D attractor animations  
+
+Without the log, none of the visualization suite works.
+
+---
+
+## **3. Enables differential analysis**
+The Differential Analyzer computes:
+
+- Δ‑vectors  
+- Δ‑norms  
+- per‑dimension deltas  
+- stability/chaos indicators  
+
+All derived from the Coordinate Log.
+
+---
+
+## **4. Supports scientific reproducibility**
+Because every step is logged:
+
+- transforms are deterministic  
+- replay is exact  
+- metrics are verifiable  
+- exports are consistent  
+
+This is essential for DAMMS‑style auditability.
+
+---
+
+# **📊 How the Coordinate Log appears in the database**
+
+```sql
+CREATE TABLE ten_d_coordinate_log (
+    id BIGSERIAL PRIMARY KEY,
+    node_id TEXT NOT NULL,
+    step_index BIGINT NOT NULL,
+    direction TEXT NOT NULL CHECK (direction IN ('forward','inverse')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    state_vector DOUBLE PRECISION[] NOT NULL CHECK (cardinality(state_vector)=10),
+    delta_axis TEXT,
+    delta_value DOUBLE PRECISION,
+    reversible_error DOUBLE PRECISION
+);
+```
+
+This schema ensures:
+
+- strict ordering  
+- complete state capture  
+- replay‑safe persistence  
+
+---
+
+# **🧠 How the Coordinate Log interacts with the system**
+
+| Subsystem | How it uses the Coordinate Log |
+|----------|--------------------------------|
+| **Transform Engine** | Writes entries after every step |
+| **Replay Engine** | Reads entries to reconstruct state |
+| **Visualizer** | Plots state evolution |
+| **Differential Analyzer** | Computes Δ‑vectors and Δ‑norms |
+| **Dashboard** | Shows real‑time state changes |
+| **Benchmark Harness** | Measures performance over steps |
+| **Testing Suite** | Validates step ordering and correctness |
+
+It is the **central historical record** of the engine.
+
+---
+
+# **🎯 Summary (the essence)**
+
+A **Coordinate Log** is:
+
+> **A complete, step‑indexed, timestamped record of every 10‑dimensional state in the engine, enabling replay, visualization, analysis, and scientific auditability.**
+
+It is the **flight recorder** of your 10D system.
+
+---
+
+If you want, I can now explain:
+
+- **Metrics Log**  
+- **Reversible Execution**  
+- **Input Log**  
+
+Which one should we explore next?
