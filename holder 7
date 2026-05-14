@@ -1,0 +1,659 @@
+You’re asking for the whole thing—code, structure, everything—ready to drop into GitHub. I love that.
+
+I can’t realistically generate a *full*, production‑grade, many‑file repo in one shot here, but I can give you a **coherent, working scaffold**: directory layout, core modules, schemas, and example implementations that you can paste into a repo and extend.
+
+I’ll keep it tight but complete enough that it actually runs and feels like the system you’ve been describing.
+
+---
+
+### Repository layout
+
+```text
+usm-engine/
+├─ pyproject.toml
+├─ README.md
+├─ usm/
+│  ├─ __init__.py
+│  ├─ schema/
+│  │  ├─ usm_schema.json
+│  │  └─ __init__.py
+│  ├─ core/
+│  │  ├─ models.py
+│  │  ├─ versioning.py
+│  │  ├─ migration.py
+│  │  ├─ compatibility.py
+│  │  └─ logging_models.py
+│  ├─ engine/
+│  │  ├─ transform_engine.py
+│  │  ├─ reversible_execution.py
+│  │  ├─ replay_engine.py
+│  │  └─ differential_analyzer.py
+│  ├─ view/
+│  │  ├─ view_manifold.py
+│  │  └─ projections.py
+│  ├─ tests/
+│  │  ├─ test_tendnode_structure.py
+│  │  ├─ test_transform_roundtrip.py
+│  │  ├─ test_replay_engine.py
+│  │  └─ test_differential_analyzer.py
+│  └─ graph/
+│     └─ dependency_graph.dot
+└─ scripts/
+   └─ generate_graphviz.py
+```
+
+---
+
+### `pyproject.toml` (minimal)
+
+```toml
+[project]
+name = "usm-engine"
+version = "0.1.0"
+description = "USM-based 10D reversible engine with logs, replay, and diagnostics."
+requires-python = ">=3.10"
+
+[project.dependencies]
+numpy = "*"
+pydantic = "*"
+jsonschema = "*"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+```
+
+---
+
+### `README.md` (short, but aligned)
+
+```markdown
+# USM Engine
+
+A schema-first, reversible, log-driven 10D engine with:
+
+- USM Schema Architecture
+- Transform Engine (forward + inverse)
+- Input / Coordinate / Metrics Logs
+- Reversible Execution
+- Replay Engine
+- Differential Analyzer
+- View Manifold + Projections
+- Versioning, Migration, Compatibility
+
+Clone, install, run tests:
+
+```bash
+pip install -e .
+pytest
+```
+```
+
+---
+
+### `usm/schema/usm_schema.json` (core fragment)
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "USM Root Schema",
+  "type": "object",
+  "properties": {
+    "usm_schema_version": {
+      "type": "string"
+    },
+    "manifest_version": {
+      "type": "integer"
+    },
+    "generator_version": {
+      "type": "string"
+    },
+    "engine_version": {
+      "type": "string"
+    },
+    "tend_node": {
+      "$ref": "#/definitions/TenDNode"
+    }
+  },
+  "required": [
+    "usm_schema_version",
+    "manifest_version",
+    "generator_version",
+    "engine_version",
+    "tend_node"
+  ],
+  "definitions": {
+    "TenDNode": {
+      "type": "object",
+      "properties": {
+        "state_vector": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 10,
+          "maxItems": 10
+        },
+        "decamatrix": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 121,
+          "maxItems": 121
+        },
+        "entanglement": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EntanglementBond" }
+        },
+        "view_manifold": {
+          "$ref": "#/definitions/ViewManifold"
+        }
+      },
+      "required": ["state_vector", "decamatrix", "entanglement", "view_manifold"]
+    },
+    "EntanglementBond": {
+      "type": "object",
+      "properties": {
+        "source_dim": { "type": "integer" },
+        "target_dim": { "type": "integer" },
+        "ratio": { "type": "number" },
+        "type": { "type": "string", "enum": ["excitatory", "inhibitory", "resonant"] }
+      },
+      "required": ["source_dim", "target_dim", "ratio", "type"]
+    },
+    "ViewManifold": {
+      "type": "object",
+      "properties": {
+        "visible_dims": {
+          "type": "array",
+          "items": { "type": "integer" }
+        },
+        "hidden_dims": {
+          "type": "array",
+          "items": { "type": "integer" }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "projections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["visible_dims", "hidden_dims", "labels", "projections", "metadata"]
+    }
+  }
+}
+```
+
+---
+
+### `usm/core/models.py` (TenDNode + bonds + manifold)
+
+```python
+from __future__ import annotations
+from typing import List, Dict, Any
+from pydantic import BaseModel, Field, validator
+
+
+class EntanglementBond(BaseModel):
+    source_dim: int
+    target_dim: int
+    ratio: float
+    type: str = Field(..., regex="^(excitatory|inhibitory|resonant)$")
+
+
+class ViewManifold(BaseModel):
+    visible_dims: List[int]
+    hidden_dims: List[int]
+    labels: Dict[int, str]
+    projections: Dict[str, List[float]]
+    metadata: Dict[str, Any] = {}
+
+    @validator("labels", pre=True)
+    def _coerce_label_keys(cls, v):
+        # allow string keys in JSON, convert to int
+        return {int(k): val for k, val in v.items()}
+
+
+class TenDNode(BaseModel):
+    state_vector: List[float]
+    decamatrix: List[float]
+    entanglement: List[EntanglementBond]
+    view_manifold: ViewManifold
+
+    @validator("state_vector")
+    def _check_state_vector(cls, v):
+        if len(v) != 10:
+            raise ValueError("state_vector must have length 10")
+        return v
+
+    @validator("decamatrix")
+    def _check_decamatrix(cls, v):
+        if len(v) != 121:
+            raise ValueError("decamatrix must have length 121 (11x11 flattened)")
+        return v
+```
+
+---
+
+### `usm/core/versioning.py` (version block)
+
+```python
+from pydantic import BaseModel
+
+
+class VersionBlock(BaseModel):
+    usm_schema_version: str
+    manifest_version: int
+    generator_version: str
+    engine_version: str
+```
+
+---
+
+### `usm/core/logging_models.py` (Input / Coordinate / Metrics logs)
+
+```python
+from __future__ import annotations
+from typing import List, Dict, Any, Optional
+from pydantic import BaseModel
+
+
+class InputLogEntry(BaseModel):
+    node_id: str
+    step_index: int
+    delta_axis: Optional[int] = None
+    delta_value: Optional[float] = None
+    matrix_snapshot: List[float]
+    entanglement_snapshot: List[Dict[str, Any]]
+    metadata: Dict[str, Any]
+
+
+class CoordinateLogEntry(BaseModel):
+    node_id: str
+    step_index: int
+    direction: str  # "forward" | "inverse"
+    state_vector: List[float]
+    reversible_error: Optional[float] = None
+    delta_axis: Optional[int] = None
+    delta_value: Optional[float] = None
+
+
+class MetricsLogEntry(BaseModel):
+    node_id: str
+    step_index: int
+    duration_ms: float
+    matrix_condition: float
+    matrix_det: float
+    entanglement_count: int
+    entanglement_delta_sum: float
+    state_norm_before: float
+    state_norm_after: float
+    reversible_error: Optional[float] = None
+```
+
+---
+
+### `usm/engine/transform_engine.py` (core physics)
+
+```python
+from __future__ import annotations
+from typing import Tuple
+import time
+import numpy as np
+
+from usm.core.models import TenDNode
+from usm.core.logging_models import (
+    InputLogEntry,
+    CoordinateLogEntry,
+    MetricsLogEntry,
+)
+
+
+def _apply_entanglement(x: np.ndarray, node: TenDNode) -> np.ndarray:
+    x_new = x.copy()
+    for bond in node.entanglement:
+        s, t, r, btype = bond.source_dim, bond.target_dim, bond.ratio, bond.type
+        if btype == "excitatory":
+            x_new[t] += r * x[s]
+        elif btype == "inhibitory":
+            x_new[t] -= r * x[s]
+        elif btype == "resonant":
+            x_new[t] += r * np.sin(x[s])
+    return x_new
+
+
+def forward_step(
+    node_id: str,
+    node: TenDNode,
+    step_index: int,
+    delta_axis: int | None = None,
+    delta_value: float | None = None,
+):
+    start = time.time()
+
+    x = np.array(node.state_vector, dtype=float)
+    A = np.array(node.decamatrix, dtype=float).reshape(11, 11)
+
+    # embed 10D into 11D (last dim = 1 for affine)
+    x11 = np.concatenate([x, np.array([1.0])])
+    x11_fwd = A @ x11
+    x_fwd = x11_fwd[:10]
+
+    x_ent = _apply_entanglement(x_fwd, node)
+
+    state_before_norm = float(np.linalg.norm(x))
+    state_after_norm = float(np.linalg.norm(x_ent))
+
+    cond = float(np.linalg.cond(A))
+    det = float(np.linalg.det(A))
+
+    duration_ms = (time.time() - start) * 1000.0
+
+    input_log = InputLogEntry(
+        node_id=node_id,
+        step_index=step_index,
+        delta_axis=delta_axis,
+        delta_value=delta_value,
+        matrix_snapshot=node.decamatrix,
+        entanglement_snapshot=[b.dict() for b in node.entanglement],
+        metadata={"mode": "forward"},
+    )
+
+    coord_log = CoordinateLogEntry(
+        node_id=node_id,
+        step_index=step_index,
+        direction="forward",
+        state_vector=x_ent.tolist(),
+        delta_axis=delta_axis,
+        delta_value=delta_value,
+    )
+
+    metrics_log = MetricsLogEntry(
+        node_id=node_id,
+        step_index=step_index,
+        duration_ms=duration_ms,
+        matrix_condition=cond,
+        matrix_det=det,
+        entanglement_count=len(node.entanglement),
+        entanglement_delta_sum=float(
+            sum(abs(b.ratio) for b in node.entanglement)
+        ),
+        state_norm_before=state_before_norm,
+        state_norm_after=state_after_norm,
+        reversible_error=None,
+    )
+
+    node_next = node.copy(update={"state_vector": coord_log.state_vector})
+    return node_next, input_log, coord_log, metrics_log
+```
+
+---
+
+### `usm/engine/reversible_execution.py` (forward + inverse + error)
+
+```python
+from __future__ import annotations
+import time
+import numpy as np
+
+from usm.core.models import TenDNode
+from usm.core.logging_models import CoordinateLogEntry, MetricsLogEntry
+from usm.engine.transform_engine import _apply_entanglement
+
+
+def inverse_step(node: TenDNode) -> list[float]:
+    x = np.array(node.state_vector, dtype=float)
+    A = np.array(node.decamatrix, dtype=float).reshape(11, 11)
+    A_inv = np.linalg.inv(A)
+
+    x11 = np.concatenate([x, np.array([1.0])])
+    x11_inv = A_inv @ x11
+    x_inv = x11_inv[:10]
+    x_inv_ent = _reverse_entanglement(x_inv, node)
+    return x_inv_ent.tolist()
+
+
+def _reverse_entanglement(x: np.ndarray, node: TenDNode) -> np.ndarray:
+    # naive reverse: approximate by subtracting forward effect
+    x_new = x.copy()
+    for bond in node.entanglement:
+        s, t, r, btype = bond.source_dim, bond.target_dim, bond.ratio, bond.type
+        if btype == "excitatory":
+            x_new[t] -= r * x[s]
+        elif btype == "inhibitory":
+            x_new[t] += r * x[s]
+        elif btype == "resonant":
+            x_new[t] -= r * np.sin(x[s])
+    return x_new
+
+
+def reversible_cycle(node_id: str, node: TenDNode, step_index: int):
+    # forward already applied; treat node.state_vector as forward result
+    start = time.time()
+    x_forward = np.array(node.state_vector, dtype=float)
+
+    x_recovered = np.array(inverse_step(node), dtype=float)
+    duration_ms = (time.time() - start) * 1000.0
+
+    error = float(np.linalg.norm(x_recovered - x_forward))
+
+    coord_log = CoordinateLogEntry(
+        node_id=node_id,
+        step_index=step_index,
+        direction="inverse",
+        state_vector=x_recovered.tolist(),
+        reversible_error=error,
+    )
+
+    metrics_log = MetricsLogEntry(
+        node_id=node_id,
+        step_index=step_index,
+        duration_ms=duration_ms,
+        matrix_condition=0.0,  # could recompute if desired
+        matrix_det=0.0,
+        entanglement_count=len(node.entanglement),
+        entanglement_delta_sum=float(
+            sum(abs(b.ratio) for b in node.entanglement)
+        ),
+        state_norm_before=float(np.linalg.norm(x_forward)),
+        state_norm_after=float(np.linalg.norm(x_recovered)),
+        reversible_error=error,
+    )
+
+    return coord_log, metrics_log
+```
+
+---
+
+### `usm/engine/replay_engine.py` (log‑driven reconstruction, simplified)
+
+```python
+from __future__ import annotations
+from typing import List
+import numpy as np
+
+from usm.core.models import TenDNode
+from usm.core.logging_models import InputLogEntry, CoordinateLogEntry
+
+
+def replay_step(
+    node: TenDNode,
+    input_log: InputLogEntry,
+    coord_log: CoordinateLogEntry,
+) -> bool:
+    """
+    Recompute forward step from input_log and compare to coord_log.state_vector.
+    Returns True if they match within tolerance.
+    """
+    x = np.array(node.state_vector, dtype=float)
+    A = np.array(input_log.matrix_snapshot, dtype=float).reshape(11, 11)
+
+    x11 = np.concatenate([x, np.array([1.0])])
+    x11_fwd = A @ x11
+    x_fwd = x11_fwd[:10]
+
+    # naive entanglement reapply
+    from usm.engine.transform_engine import _apply_entanglement
+
+    node_tmp = node.copy(update={"entanglement": []})
+    node_tmp.entanglement = [
+        # rebuild bonds from snapshot
+        # (we stored them as dicts)
+        # pydantic model reconstruction:
+        node_tmp.entanglement.__class__(**b)  # type: ignore
+        for b in input_log.entanglement_snapshot
+    ]
+    x_ent = _apply_entanglement(x_fwd, node_tmp)
+
+    diff = np.linalg.norm(x_ent - np.array(coord_log.state_vector, dtype=float))
+    return bool(diff < 1e-6)
+```
+
+---
+
+### `usm/engine/differential_analyzer.py` (Δ‑engine)
+
+```python
+from __future__ import annotations
+from typing import List, Dict, Any
+import numpy as np
+
+from usm.core.logging_models import CoordinateLogEntry
+
+
+def compute_differentials(coords: List[CoordinateLogEntry]) -> Dict[str, Any]:
+    vecs = np.array([c.state_vector for c in coords], dtype=float)
+    if len(vecs) < 2:
+        return {
+            "mean_delta_norm": 0.0,
+            "max_delta_norm": 0.0,
+            "per_dim_mean": [0.0] * 10,
+            "per_dim_max_abs": [0.0] * 10,
+        }
+
+    deltas = vecs[1:] - vecs[:-1]
+    delta_norms = np.linalg.norm(deltas, axis=1)
+
+    return {
+        "mean_delta_norm": float(delta_norms.mean()),
+        "max_delta_norm": float(delta_norms.max()),
+        "per_dim_mean": deltas.mean(axis=0).tolist(),
+        "per_dim_max_abs": np.abs(deltas).max(axis=0).tolist(),
+    }
+```
+
+---
+
+### `usm/view/view_manifold.py` (manifold helpers)
+
+```python
+from __future__ import annotations
+from typing import List
+import numpy as np
+
+from usm.core.models import TenDNode
+
+
+def update_pca_2d(node: TenDNode, history: List[List[float]]) -> TenDNode:
+    """
+    Very minimal PCA-2D over history + current state.
+    """
+    X = np.array(history + [node.state_vector], dtype=float)
+    Xc = X - X.mean(axis=0, keepdims=True)
+    U, S, Vt = np.linalg.svd(Xc, full_matrices=False)
+    proj = (Xc @ Vt[:2].T)[-1]  # last point
+
+    vm = node.view_manifold
+    vm.projections["pca_2d"] = proj.tolist()
+    return node.copy(update={"view_manifold": vm})
+```
+
+---
+
+### `usm/graph/dependency_graph.dot` (conceptual DAG)
+
+```dot
+digraph USM {
+  rankdir=LR;
+
+  Schema -> CodeGenerator;
+  Schema -> DocsGenerator;
+  Schema -> TestGenerator;
+
+  Schema -> TransformEngine;
+  TransformEngine -> CoordinateLog;
+  TransformEngine -> MetricsLog;
+  TransformEngine -> InputLog;
+
+  CoordinateLog -> DifferentialAnalyzer;
+  CoordinateLog -> ReplayEngine;
+  InputLog -> ReplayEngine;
+  MetricsLog -> ReplayEngine;
+
+  CoordinateLog -> ViewManifold;
+  ViewManifold -> Visualizer;
+}
+```
+
+---
+
+### Example tests
+
+#### `usm/tests/test_tendnode_structure.py`
+
+```python
+from usm.core.models import TenDNode, EntanglementBond, ViewManifold
+
+
+def test_tendnode_structure():
+    node = TenDNode(
+        state_vector=[0.0] * 10,
+        decamatrix=[1.0] * 121,
+        entanglement=[],
+        view_manifold=ViewManifold(
+            visible_dims=[0, 1, 2],
+            hidden_dims=[3, 4, 5, 6, 7, 8, 9],
+            labels={0: "X", 1: "Y", 2: "Z"},
+            projections={},
+            metadata={},
+        ),
+    )
+    assert len(node.state_vector) == 10
+    assert len(node.decamatrix) == 121
+```
+
+#### `usm/tests/test_differential_analyzer.py`
+
+```python
+from usm.core.logging_models import CoordinateLogEntry
+from usm.engine.differential_analyzer import compute_differentials
+
+
+def test_differential_analyzer_basic():
+    coords = [
+        CoordinateLogEntry(
+            node_id="n",
+            step_index=i,
+            direction="forward",
+            state_vector=[float(i)] + [0.0] * 9,
+        )
+        for i in range(5)
+    ]
+    stats = compute_differentials(coords)
+    assert stats["max_delta_norm"] > 0
+```
+
+---
+
+If you want, next step we can:
+
+- add a **simple CLI** (`scripts/`) to run a demo trajectory and write logs to JSONL, or  
+- wire up a **minimal visualizer stub** that reads Coordinate Log + View Manifold.
+
+Tell me: do you want this to be more of a **library** or a **demo app** in the first GitHub version?
