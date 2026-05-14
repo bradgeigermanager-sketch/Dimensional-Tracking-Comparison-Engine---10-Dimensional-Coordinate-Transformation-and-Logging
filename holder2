@@ -1,0 +1,231 @@
+Absolutely — I’ll introduce **cross‑linked, GitHub‑ready documentation**, where every subsystem name becomes a **clickable link** pointing to the relevant file in your repo.  
+This turns your `docs/` folder into a **navigable knowledge graph**, just like a professional open‑source project.
+
+Below is the **fully linked version** of your documentation set.
+
+---
+
+# 📚 **Full Docs Folder (with internal links)**
+
+Each file now contains **inline links** to code modules, other docs, and schema definitions.  
+All links assume the repo structure we generated earlier.
+
+---
+
+# `docs/architecture.md`
+
+```markdown
+# Architecture
+
+The USM Engine is a **schema-first, reversible, log-driven 10D computational system**.
+
+It is composed of the following subsystems:
+
+- **[USM Schema](schema.md)** — single source of truth for all models.
+- **[Transform Engine](transform.md)** — forward physics (DecaMatrix + entanglement).
+- **[Reversible Execution](transform.md#reversible-execution)** — forward + inverse + error.
+- **[Replay Engine](replay.md)** — log-driven time machine.
+- **[Logs](logs.md)** — Input, Coordinate, Metrics.
+- **[Differential Analyzer](differential.md)** — Δ-based dynamics.
+- **[View Manifold](view_manifold.md)** — semantic lens + projections.
+- **[Versioning & Migration](versioning.md)** — temporal safety net.
+- **Graphviz Dependency Graph** — `usm/graph/dependency_graph.dot`.
+
+## Code Map
+
+- Models → [`usm/core/models.py`](../usm/core/models.py)
+- Transform Engine → [`usm/engine/transform_engine.py`](../usm/engine/transform_engine.py)
+- Replay Engine → [`usm/engine/replay_engine.py`](../usm/engine/replay_engine.py)
+- Differential Analyzer → [`usm/engine/differential_analyzer.py`](../usm/engine/differential_analyzer.py)
+- View Manifold → [`usm/view/view_manifold.py`](../usm/view/view_manifold.py)
+```
+
+---
+
+# `docs/schema.md`
+
+```markdown
+# USM Schema
+
+The canonical schema lives at:
+
+- [`usm/schema/usm_schema.json`](../usm/schema/usm_schema.json)
+
+It defines:
+
+- `TenDNode`
+- `EntanglementBond`
+- `ViewManifold`
+- Version metadata
+- Log entry structures
+
+These map directly to:
+
+- [`models.py`](../usm/core/models.py)
+- [`logging_models.py`](../usm/core/logging_models.py)
+```
+
+---
+
+# `docs/logs.md`
+
+```markdown
+# Logs
+
+The engine uses three primary logs:
+
+- **Input Log**
+- **Coordinate Log**
+- **Metrics Log**
+
+All log models are defined in:
+
+- [`logging_models.py`](../usm/core/logging_models.py)
+
+Logs are emitted by:
+
+- **Transform Engine** → [`transform_engine.py`](../usm/engine/transform_engine.py)
+- **Reversible Execution** → [`reversible_execution.py`](../usm/engine/reversible_execution.py)
+- **Replay Engine** → [`replay_engine.py`](../usm/engine/replay_engine.py)
+```
+
+---
+
+# `docs/transform.md`
+
+```markdown
+# Transform Engine
+
+Code:  
+[`usm/engine/transform_engine.py`](../usm/engine/transform_engine.py)
+
+The Transform Engine performs:
+
+- forward transform
+- entanglement propagation
+- metrics computation
+- log emission
+
+## Reversible Execution
+
+Code:  
+[`usm/engine/reversible_execution.py`](../usm/engine/reversible_execution.py)
+
+This subsystem:
+
+- runs inverse transform
+- computes reversible error
+- emits inverse logs
+```
+
+---
+
+# `docs/replay.md`
+
+```markdown
+# Replay Engine
+
+Code:  
+[`usm/engine/replay_engine.py`](../usm/engine/replay_engine.py)
+
+Replay reconstructs past steps using:
+
+- **Input Log** → [`logging_models.py`](../usm/core/logging_models.py)
+- **Coordinate Log**
+- **Metrics Log**
+- **Transform Engine** → [`transform_engine.py`](../usm/engine/transform_engine.py)
+
+Replay validates:
+
+- transform correctness
+- log integrity
+- entanglement behavior
+```
+
+---
+
+# `docs/differential.md`
+
+```markdown
+# Differential Analyzer
+
+Code:  
+[`usm/engine/differential_analyzer.py`](../usm/engine/differential_analyzer.py)
+
+The analyzer computes:
+
+- Δ-vectors
+- Δ-norms
+- per-dimension statistics
+
+It consumes:
+
+- **Coordinate Log** → [`logging_models.py`](../usm/core/logging_models.py)
+```
+
+---
+
+# `docs/view_manifold.md`
+
+```markdown
+# View Manifold
+
+Code:  
+[`usm/view/view_manifold.py`](../usm/view/view_manifold.py)
+
+The View Manifold defines:
+
+- visible dimensions
+- hidden dimensions
+- semantic labels
+- projections (e.g., PCA-2D)
+- metadata
+
+Projection helpers live in:
+
+- [`projections.py`](../usm/view/projections.py)
+```
+
+---
+
+# `docs/versioning.md`
+
+```markdown
+# Versioning, Migration, Compatibility
+
+Versioning model:  
+[`versioning.py`](../usm/core/versioning.py)
+
+Migration logic:  
+[`migration.py`](../usm/core/migration.py)
+
+Compatibility matrix:  
+[`compatibility.py`](../usm/core/compatibility.py)
+
+These ensure:
+
+- schema evolution
+- manifest upgrades
+- replay safety across versions
+```
+
+---
+
+# ✔️ Your docs folder is now fully cross‑linked
+
+Everything is:
+
+- clickable  
+- navigable  
+- internally consistent  
+- GitHub‑ready  
+- professional‑grade  
+
+If you want, I can now:
+
+- **Add a top‑level `index.md`** that links all docs  
+- **Generate a MkDocs config** for a full documentation website  
+- **Add diagrams** (Graphviz → PNG)  
+- **Add a “Quickstart” tutorial**  
+
+Just tell me what direction you want next.
