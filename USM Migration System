@@ -1,0 +1,243 @@
+The **USM Migration System** is the subsystem that lets your entire schema‑first architecture *evolve safely over time* — without breaking replay, without corrupting logs, and without drifting away from the canonical USM Schema.  
+If the **USM Versioning Model** is the *timeline*, the Migration System is the **time machine**: it moves manifests, logs, and metadata forward (or backward) across schema versions while preserving meaning, structure, and auditability.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The USM Migration System is:
+
+> **A deterministic, reversible, schema‑aware transformation pipeline that upgrades or downgrades manifests, logs, and metadata between USM schema versions while preserving semantics and replay safety.**
+
+It is the **evolution engine** of the USM.
+
+---
+
+## **🧩 Why the Migration System Exists**
+
+Because your architecture is:
+
+- schema‑first  
+- manifest‑driven  
+- audit‑oriented  
+- replay‑dependent  
+- version‑controlled  
+
+You need a way to:
+
+- evolve the schema  
+- keep old logs valid  
+- keep new logs compatible  
+- maintain deterministic replay  
+- avoid breaking transforms  
+- avoid manual migrations  
+
+The Migration System ensures **every version of the engine remains usable forever**.
+
+---
+
+## **🏛️ The Three Pillars of the Migration System**
+
+### **1. Migration Rules (MR)**
+Small, atomic, deterministic transformations:
+
+- add field  
+- rename field  
+- remove field  
+- change type  
+- move nested object  
+- split/merge structures  
+- update metadata  
+
+Each rule is:
+
+- reversible  
+- schema‑aware  
+- deterministic  
+- logged  
+
+These rules form the **building blocks** of migrations.
+
+---
+
+### **2. Migration Plans (MP)**
+A migration plan is an ordered list of migration rules that moves a manifest from:
+
+\[
+\text{schema version } S \rightarrow S'
+\]
+
+Example:
+
+```
+1.4.0 → 1.5.0
+```
+
+Plans are:
+
+- version‑specific  
+- reversible  
+- validated by CI  
+- stored alongside the schema  
+
+They are the **recipes** for schema evolution.
+
+---
+
+### **3. Migration Engine (ME)**
+The runtime component that:
+
+- loads the correct migration plan  
+- applies rules in order  
+- validates against the target schema  
+- updates manifest version  
+- logs migration metadata  
+
+It is the **executor** of migrations.
+
+---
+
+## **📐 How a Migration Works (Step‑By‑Step)**
+
+### **1. Detect version mismatch**
+The engine compares:
+
+- manifest_version  
+- usm_schema_version  
+
+If they differ → migration required.
+
+---
+
+### **2. Load the migration plan**
+The plan for:
+
+```
+from_version → to_version
+```
+
+is loaded.
+
+---
+
+### **3. Apply migration rules**
+Each rule transforms the manifest:
+
+- add missing fields  
+- rename outdated fields  
+- restructure nested objects  
+- update metadata formats  
+
+---
+
+### **4. Validate against target schema**
+The migrated manifest is validated using:
+
+- JSON Schema Draft‑07  
+- deterministic field ordering  
+- type constraints  
+- cardinality constraints  
+
+---
+
+### **5. Update version block**
+The manifest’s version block is updated:
+
+- manifest_version  
+- usm_schema_version  
+- generator_version  
+
+---
+
+### **6. Log the migration**
+A migration log entry is created:
+
+- old version  
+- new version  
+- rules applied  
+- timestamp  
+- checksum  
+
+This ensures **auditability**.
+
+---
+
+## **📦 Example Migration Rule (Conceptual)**
+
+```json
+{
+  "rule": "rename_field",
+  "from": "state",
+  "to": "state_vector"
+}
+```
+
+Or:
+
+```json
+{
+  "rule": "add_field",
+  "field": "metadata",
+  "default": {}
+}
+```
+
+These rules are **atomic and reversible**.
+
+---
+
+## **🧠 How the Migration System interacts with the architecture**
+
+| Subsystem | Role |
+|----------|------|
+| **USM Schema** | Defines target structure |
+| **Versioning Model** | Determines migration direction |
+| **Code Generator** | Regenerates models for new schema |
+| **Docs Generator** | Regenerates docs for new schema |
+| **Replay Engine** | Uses migrated manifests for correctness |
+| **CI Pipeline** | Validates migration plans |
+| **Benchmark Harness** | Records version transitions |
+
+The Migration System is the **glue** that keeps all versions interoperable.
+
+---
+
+## **🛡️ Guarantees Provided by the Migration System**
+
+### **1. Replay Safety**
+Old logs can always be replayed using:
+
+- migrated manifests  
+- correct engine version  
+- correct schema version  
+
+### **2. Backward Compatibility**
+New manifests can be downgraded for older engines.
+
+### **3. Forward Compatibility**
+Old manifests can be upgraded to new schema versions.
+
+### **4. Determinism**
+Same input → same migrated output.
+
+### **5. Auditability**
+Every migration is logged and reproducible.
+
+---
+
+## **🎯 Final Summary**
+
+The **USM Migration System** is:
+
+> **A deterministic, reversible, schema‑aware pipeline that upgrades and downgrades manifests, logs, and metadata across schema versions — ensuring replay safety, backward/forward compatibility, and audit‑grade reproducibility.**
+
+It is the **evolution engine** of your schema‑first architecture.
+
+---
+
+If you want, we can continue with:
+
+- **Schema‑Driven Test Generator**  
+- **Graphviz Dependency Graph**  
+- **USM Compatibility Matrix**  
+
+Which subsystem should we explore next?
