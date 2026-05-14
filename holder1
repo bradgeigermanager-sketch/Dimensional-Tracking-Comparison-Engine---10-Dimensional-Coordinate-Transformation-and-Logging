@@ -1,0 +1,409 @@
+Here’s a complete `docs/` folder you can drop straight into the repo.
+
+---
+
+### `docs/architecture.md`
+
+```markdown
+# Architecture
+
+The USM Engine is a **schema-first, reversible, log-driven 10D computational system**.  
+Its core ideas:
+
+- All structures are defined in a **USM JSON Schema**.
+- Every transform is **reversible** and **logged**.
+- Any past state can be **replayed deterministically**.
+- Diagnostics are built from **differentials** and **metrics**.
+- Interpretation is handled by a **View Manifold**.
+- Evolution over time is governed by **versioning, migration, and compatibility**.
+
+## Core subsystems
+
+- **USM Schema** — single source of truth for all models.
+- **Transform Engine** — forward physics (DecaMatrix + entanglement).
+- **Reversible Execution** — forward + inverse + error.
+- **Replay Engine** — log-driven time machine.
+- **Logs** — Input, Coordinate, Metrics.
+- **Differential Analyzer** — Δ-based dynamics.
+- **View Manifold & Projections** — semantic lens + PCA/UMAP.
+- **Versioning, Migration, Compatibility** — temporal safety net.
+- **Graphviz Dependency Graph** — visual DAG of the system.
+
+## Data flow
+
+1. A `TenDNode` is created from the schema.
+2. The **Transform Engine** applies a forward step:
+   - updates state
+   - emits Input / Coordinate / Metrics logs
+3. **Reversible Execution** optionally runs an inverse step:
+   - computes reversible error
+4. **Differential Analyzer** processes Coordinate Log:
+   - computes Δ-vectors and statistics
+5. **View Manifold** updates projections and labels.
+6. **Replay Engine** can reconstruct any step from logs.
+7. Versioning + migration ensure compatibility over time.
+
+This architecture is designed for **scientific reproducibility**, **auditability**, and **nonlinear dynamics exploration**.
+```
+
+---
+
+### `docs/schema.md`
+
+```markdown
+# USM Schema
+
+The USM Schema is the **canonical JSON Schema** that defines:
+
+- `TenDNode`
+- `EntanglementBond`
+- `ViewManifold`
+- Version metadata
+- Log entry structures
+
+It lives in:
+
+- `usm/schema/usm_schema.json`
+
+## TenDNode
+
+Represents a single 10D state:
+
+- `state_vector`: length-10 array of floats.
+- `decamatrix`: length-121 array (flattened 11×11).
+- `entanglement`: list of `EntanglementBond`.
+- `view_manifold`: `ViewManifold` object.
+
+## EntanglementBond
+
+Defines cross-dimensional coupling:
+
+- `source_dim` (int)
+- `target_dim` (int)
+- `ratio` (float)
+- `type` (string: `excitatory`, `inhibitory`, `resonant`)
+
+## ViewManifold
+
+Defines how the node is interpreted:
+
+- `visible_dims`: indices shown in visualizers.
+- `hidden_dims`: indices kept internal.
+- `labels`: mapping from dimension index → semantic label.
+- `projections`: named projections (e.g., `pca_2d`).
+- `metadata`: arbitrary tags (cluster, role, etc.).
+
+The schema is used by:
+
+- code (Pydantic models)
+- tests
+- docs
+- future generators and migrations
+```
+
+---
+
+### `docs/logs.md`
+
+```markdown
+# Logs
+
+The engine uses three primary logs:
+
+- **Input Log** — why a step happened.
+- **Coordinate Log** — what the state was.
+- **Metrics Log** — how well it behaved.
+
+Each log is step-indexed and aligned by `node_id` and `step_index`.
+
+## Input Log
+
+Captures causal inputs:
+
+- `node_id`
+- `step_index`
+- `delta_axis`
+- `delta_value`
+- `matrix_snapshot` (DecaMatrix)
+- `entanglement_snapshot`
+- `metadata` (mode, context, etc.)
+
+Used by:
+
+- **Replay Engine** (reconstructs transforms)
+- debugging and forensics
+
+## Coordinate Log
+
+Captures state evolution:
+
+- `node_id`
+- `step_index`
+- `direction` (`forward` / `inverse`)
+- `state_vector`
+- `reversible_error` (inverse only)
+- optional `delta_axis`, `delta_value`
+
+Used by:
+
+- **Replay Engine**
+- **Differential Analyzer**
+- visualizers
+
+## Metrics Log
+
+Captures numerical health:
+
+- `node_id`
+- `step_index`
+- `duration_ms`
+- `matrix_condition`
+- `matrix_det`
+- `entanglement_count`
+- `entanglement_delta_sum`
+- `state_norm_before`
+- `state_norm_after`
+- `reversible_error` (inverse only)
+
+Used by:
+
+- dashboards
+- stability analysis
+- performance benchmarking
+```
+
+---
+
+### `docs/transform.md`
+
+```markdown
+# Transform Engine
+
+The Transform Engine is the **physics core** of the system.
+
+It performs:
+
+- forward transform
+- entanglement propagation
+- metadata updates (via View Manifold helpers)
+- metrics computation
+- log emission
+
+## Forward transform
+
+1. Take `state_vector` (10D).
+2. Embed into 11D by appending `1.0` (affine).
+3. Multiply by `DecaMatrix` (11×11).
+4. Drop back to 10D.
+5. Apply entanglement bonds:
+   - excitatory: `target += ratio * source`
+   - inhibitory: `target -= ratio * source`
+   - resonant: `target += ratio * sin(source)`
+
+Outputs:
+
+- new `TenDNode` with updated `state_vector`
+- `InputLogEntry`
+- `CoordinateLogEntry`
+- `MetricsLogEntry`
+
+## Entanglement
+
+Entanglement is applied after the linear transform, giving:
+
+- cross-dimensional coupling
+- resonance patterns
+- richer dynamics
+
+The exact behavior is controlled by `EntanglementBond` definitions.
+
+## Metrics
+
+The engine computes:
+
+- matrix condition number
+- determinant
+- norms before/after
+- entanglement influence
+
+These are stored in the Metrics Log.
+```
+
+---
+
+### `docs/replay.md`
+
+```markdown
+# Replay Engine
+
+The Replay Engine is the **time machine** of the system.
+
+It reconstructs past steps using:
+
+- Input Log
+- Coordinate Log
+- Metrics Log
+- version metadata (future extension)
+
+## Basic replay flow
+
+For a given step:
+
+1. Load `TenDNode` at previous state.
+2. Load `InputLogEntry` for step `k`.
+3. Recompute forward transform using:
+   - `matrix_snapshot`
+   - `entanglement_snapshot`
+   - `delta_axis`, `delta_value` (if used)
+4. Compare recomputed state to `CoordinateLogEntry.state_vector`.
+5. If difference < tolerance → replay validated.
+
+## Use cases
+
+- **Debugging**: reproduce anomalies.
+- **Forensics**: understand exactly what happened.
+- **Validation**: ensure logs and transforms are consistent.
+- **Reproducibility**: rerun experiments later or on other machines.
+
+Replay is designed to be deterministic given the logs and schema.
+```
+
+---
+
+### `docs/differential.md`
+
+```markdown
+# Differential Analyzer
+
+The Differential Analyzer exposes the **local dynamics** of the system.
+
+It operates on sequences of `CoordinateLogEntry` and computes:
+
+- Δ-vectors: `x_{t+1} - x_t`
+- Δ-norms: `‖Δx‖`
+- per-dimension statistics
+
+## Outputs
+
+Typical statistics:
+
+- `mean_delta_norm`
+- `max_delta_norm`
+- `per_dim_mean`
+- `per_dim_max_abs`
+
+These can be used to:
+
+- detect drift
+- detect blow-up
+- characterize stability vs chaos
+- correlate with entanglement patterns and metrics
+
+The analyzer is intentionally simple and composable, so you can extend it with:
+
+- higher-order differences (Δ², Δ³)
+- local Lyapunov-like measures
+- regime classification
+```
+
+---
+
+### `docs/view_manifold.md`
+
+```markdown
+# View Manifold
+
+The View Manifold is the **semantic lens** of the engine.
+
+It defines how a `TenDNode` is:
+
+- viewed
+- labeled
+- projected
+- annotated
+
+## Fields
+
+- `visible_dims`: which dimensions appear in visualizers.
+- `hidden_dims`: which dimensions are internal.
+- `labels`: human-readable names for dimensions.
+- `projections`: precomputed projections (e.g., `pca_2d`).
+- `metadata`: arbitrary tags (cluster, role, etc.).
+
+## Projections
+
+The engine includes a minimal PCA-2D helper:
+
+- takes a history of state vectors
+- computes PCA
+- stores the last point’s projection in `view_manifold.projections["pca_2d"]`
+
+You can extend this with:
+
+- PCA-3D
+- UMAP
+- t-SNE
+- custom learned projections
+
+The View Manifold ensures that visualizations and analyses are **reproducible** and **interpretable**.
+```
+
+---
+
+### `docs/versioning.md`
+
+```markdown
+# Versioning, Migration, Compatibility
+
+The engine is designed to evolve safely over time.
+
+Three concepts:
+
+- **Versioning** — explicit versions for schema, manifest, generator, engine.
+- **Migration** — rules to move data between versions.
+- **Compatibility Matrix** — declarative map of which versions can interact.
+
+## Versioning
+
+A `VersionBlock` (future extension) would include:
+
+- `usm_schema_version`
+- `manifest_version`
+- `generator_version`
+- `engine_version`
+
+These can be attached to:
+
+- manifests
+- logs
+- nodes
+
+## Migration
+
+Migration logic (placeholder in `core/migration.py`) is responsible for:
+
+- upgrading/downgrading manifests
+- transforming data to new schemas
+- ensuring replay remains valid across versions
+
+## Compatibility Matrix
+
+The compatibility layer (placeholder in `core/compatibility.py`) encodes:
+
+- which schema versions are compatible
+- which engine versions can read which manifests
+- when migration is required vs forbidden
+
+This allows you to:
+
+- reject incompatible combinations
+- automatically trigger migrations
+- keep replay and logs valid over long time spans
+```
+
+---
+
+If you want, I can now:
+
+- tighten the **architecture.md** to mirror your original “Unified 10D to DAMMS Schema” narrative more closely, or  
+- add inline links from docs to specific modules (e.g., `usm/engine/transform_engine.py`) so the repo feels hyperlinked and “tourable.”
