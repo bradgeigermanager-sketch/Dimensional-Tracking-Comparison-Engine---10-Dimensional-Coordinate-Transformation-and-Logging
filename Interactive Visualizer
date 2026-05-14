@@ -1,0 +1,162 @@
+The **Interactive Visualizer** is the subsystem that lets you *see* your 10‑dimensional engine in motion — not as raw numbers, but as **live geometry**, **projected manifolds**, **Δ‑patterns**, and **entanglement‑driven distortions**.  
+It is the **primary human interface** for exploring Ten‑D Node dynamics.
+
+Below is the complete, structured, DAMMS‑aligned explanation.
+
+---
+
+## **🎨 What the Interactive Visualizer *is***  
+A **real‑time, browser‑based visualization environment** that renders:
+
+- 2D PCA projections  
+- 3D attractor trajectories  
+- Δ‑norm overlays  
+- entanglement‑driven distortions  
+- dimension toggles  
+- smoothing and playback controls  
+
+It consumes the **View Manifold**, **Coordinate Log**, **Metrics Log**, and **Projection Modes** to create a coherent, interactive representation of the system.
+
+---
+
+## **🧩 Core Components of the Visualizer**
+
+### **1. Dimension Toggle Panel**  
+Lets you choose which dimensions to display:
+
+- X/Y/Z axes  
+- any of the 10 raw dimensions  
+- PCA‑2D / PCA‑3D  
+- UMAP‑2D  
+- custom projections  
+
+This is driven by the **View Manifold**.
+
+---
+
+### **2. Trajectory Renderer**  
+Plots the node’s motion over time using:
+
+- PCA‑2D  
+- PCA‑3D  
+- raw dimension pairs  
+- Δ‑norm color gradients  
+
+This is the heart of the visualizer — the **motion canvas**.
+
+---
+
+### **3. Δ‑Norm Overlay**  
+Uses the **Differential Analyzer** to color each segment by:
+
+- magnitude of change  
+- entanglement‑induced spikes  
+- stability vs chaos  
+
+This makes the system’s *texture* visible.
+
+---
+
+### **4. Entanglement Visualization**  
+Shows:
+
+- source → target influence  
+- bond strength  
+- resonance loops  
+- inhibitory patterns  
+
+This is where the engine’s **cross‑dimensional structure** becomes visible.
+
+---
+
+### **5. Playback Controls**  
+Includes:
+
+- play / pause  
+- step forward / backward  
+- speed slider  
+- smoothing slider  
+- range selection  
+
+These controls use the **Replay Engine** to reconstruct exact states.
+
+---
+
+### **6. Metadata & Metrics Panel**  
+Displays:
+
+- state vector  
+- condition number  
+- determinant  
+- reversible error  
+- entanglement count  
+- Δ‑norm  
+
+This is the **numerical context** for the visual motion.
+
+---
+
+## **⚙️ How the Visualizer Works Internally**
+
+### **Data Sources**
+It pulls from:
+
+- **Coordinate Log** → state vectors  
+- **Metrics Log** → stability metrics  
+- **Input Log** → deltas + matrix snapshots  
+- **Projection Modes** → PCA/UMAP  
+- **View Manifold** → labels, visibility, projections  
+
+### **Rendering Engine**
+Uses:
+
+- WebGL for 3D  
+- Canvas/SVG for 2D  
+- GPU‑accelerated point clouds  
+- incremental streaming from logs  
+
+### **Replay Integration**
+The visualizer can:
+
+- rewind  
+- fast‑forward  
+- jump to any step  
+- animate full trajectories  
+
+This is powered by the **Replay Engine**.
+
+---
+
+## **🧠 How the Interactive Visualizer interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **View Manifold** | Defines visible axes + projections |
+| **Coordinate Log** | Provides state vectors |
+| **Metrics Log** | Provides stability overlays |
+| **Differential Analyzer** | Provides Δ‑norms |
+| **Projection Modes** | Provides PCA/UMAP coordinates |
+| **Replay Engine** | Enables step‑accurate playback |
+| **Dashboarding** | Shares metrics for cross‑view analysis |
+
+The visualizer is the **interpretation layer** for the entire engine.
+
+---
+
+## **🎯 Summary (the essence)**
+
+The **Interactive Visualizer** is:
+
+> **A real‑time, projection‑driven visualization environment that renders 10‑dimensional trajectories, Δ‑patterns, entanglement behavior, and stability metrics — powered by the View Manifold, logs, and replay engine.**
+
+It is the **primary window** into the engine’s dynamics.
+
+---
+
+If you want, we can continue with:
+
+- **3D Attractor View**  
+- **Engine Client**  
+- **Dashboarding**  
+
+Which subsystem should we explore next?
