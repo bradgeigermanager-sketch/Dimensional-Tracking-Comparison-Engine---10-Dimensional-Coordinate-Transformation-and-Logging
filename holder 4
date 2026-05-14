@@ -1,0 +1,168 @@
+Brad, let’s wire your **schema‑driven code generator** directly into **CI**, so every commit that touches the USM schema automatically regenerates:
+
+- **Python dataclasses**  
+- **TypeScript interfaces**  
+- (and anything else you add later: SQL DDL, docs, stubs, etc.)
+
+This gives you a **self‑healing manifest pipeline** — exactly the kind of recursive, audit‑friendly workflow you prefer.
+
+Below is the **complete CI integration**, expressed as a clean, deterministic workflow.
+
+---
+
+# 🧩 **1. CI Workflow: Schema‑Driven Codegen Pipeline**
+
+This workflow:
+
+- Watches for changes to `usm_v1_schema.json` or the generator  
+- Runs the generator  
+- Validates the generated code  
+- Fails if the generated files are out of sync  
+- Optionally commits regenerated files back to the repo  
+
+Here is the full workflow file:
+
+```yaml
+name: USM Schema Codegen
+
+on:
+  push:
+    paths:
+      - "usm_v1_schema.json"
+      - "generate_from_usm_schema.py"
+  pull_request:
+    paths:
+      - "usm_v1_schema.json"
+      - "generate_from_usm_schema.py"
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install dataclasses-json jsonschema
+
+      - name: Run USM code generator
+        run: |
+          python generate_from_usm_schema.py
+
+      - name: Detect changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Generated files are out of sync with schema."
+            echo "Please run: python generate_from_usm_schema.py"
+            git status --porcelain
+            exit 1
+          fi
+
+      - name: Success
+        run: echo "USM codegen is synchronized."
+```
+
+This enforces **schema → code determinism**.
+
+---
+
+# 🧩 **2. Optional: Auto‑Commit Regenerated Files**
+
+If you want the CI to automatically commit regenerated files:
+
+```yaml
+      - name: Auto-commit regenerated files
+        if: failure()
+        run: |
+          git config user.name "usm-codegen-bot"
+          git config user.email "bot@example.com"
+          git add usm_manifest_models.py usm_manifest_models.ts
+          git commit -m "Auto-regenerate USM models"
+          git push
+```
+
+This turns your schema into a **source of truth** that self‑propagates.
+
+---
+
+# 🧩 **3. Optional: Schema Validation Step**
+
+To ensure the schema itself is valid:
+
+```yaml
+      - name: Validate USM schema
+        run: |
+          python - <<EOF
+          import json, jsonschema
+          schema = json.load(open("usm_v1_schema.json"))
+          jsonschema.Draft202012Validator.check_schema(schema)
+          print("Schema is valid.")
+          EOF
+```
+
+This prevents malformed schema updates from breaking the pipeline.
+
+---
+
+# 🧩 **4. Optional: Regeneration Gate for PRs**
+
+If you want PRs to **fail** unless the generated code is up‑to‑date:
+
+```yaml
+      - name: Enforce codegen freshness
+        run: |
+          python generate_from_usm_schema.py
+          git diff --exit-code || (echo "Generated code is stale"; exit 1)
+```
+
+This ensures **every PR** respects the manifest.
+
+---
+
+# 🧩 **5. Optional: Artifact Upload**
+
+If you want CI to publish the generated models:
+
+```yaml
+      - name: Upload generated models
+        uses: actions/upload-artifact@v4
+        with:
+          name: usm-models
+          path: |
+            usm_manifest_models.py
+            usm_manifest_models.ts
+```
+
+This is useful for downstream pipelines.
+
+---
+
+# 🎯 **What you now have**
+
+A fully wired, operational CI pipeline that:
+
+- Watches the USM schema  
+- Regenerates all code artifacts  
+- Validates schema correctness  
+- Enforces determinism  
+- Optionally auto‑commits regenerated files  
+- Publishes artifacts  
+
+This turns your USM into a **living, self‑maintaining specification** — exactly the kind of recursive, mesh‑aligned architecture you thrive on.
+
+---
+
+If you want, I can now generate:
+
+- **A Graphviz dependency graph** of the entire USM  
+- **A schema‑driven documentation generator**  
+- **A schema‑driven test generator** (pytest stubs for every manifest section)  
+
+Just tell me which direction you want to go next.
