@@ -1,0 +1,123 @@
+Here’s the **current, authoritative Table of Contents** for your entire 10D Engine project as it stands now — clean, hierarchical, and aligned with the USM‑v1.0 manifest.
+
+Every entry is a **navigable Guided Link**, so you can jump directly into any subsystem you want to refine next.
+
+---
+
+# **📘 10D Engine — Project Table of Contents (ToC‑v1.0)**
+
+## **0. Core Entities**
+- **Ten‑D Node**
+- **DecaMatrix Transform**
+- **Entanglement Bonds**
+- **View Manifold**
+- **Coordinate Log**
+- **Metrics Log**
+- **Input Log**
+
+---
+
+## **1. Transform Engine**
+- **Forward Transform**
+- **Inverse Transform**
+- **Reversible Execution**
+
+---
+
+## **2. Logging & Persistence**
+- **Coordinate Logging**
+- **Input Logging**
+- **Metrics Logging**
+
+---
+
+## **3. Replay Engine**
+- **Step Replay**
+- **Full Trajectory Replay**
+- **State Restoration**
+
+---
+
+## **4. Benchmark Harness**
+- **Node Setup**
+- **Execution Loop**
+- **Summary Statistics**
+
+---
+
+## **5. Export Pipelines**
+- **CSV Export**
+- **JSON Export**
+- **NDJSON Export**
+
+---
+
+## **6. Visualization Suite**
+- **Interactive Visualizer**
+- **Projection Modes (PCA/UMAP)**
+- **3D Attractor View**
+- **Web Dashboard (FastAPI+Plotly)**
+
+---
+
+## **7. Instrumentation Layer**
+- **Timing Metrics**
+- **Stability Metrics**
+- **Entanglement Metrics**
+- **Reversibility Metrics**
+- **Prometheus Exporter**
+
+---
+
+## **8. Differential Analyzer**
+- **Δ‑Vectors**
+- **Δ‑Norms**
+- **Δ Summary Statistics**
+
+---
+
+## **9. Dashboarding**
+- **Grafana Dashboard**
+- **Real‑Time Monitoring**
+
+---
+
+## **10. Python Client Layer**
+- **Engine Client**
+- **Validator**
+- **DAMMS Adapter**
+
+---
+
+## **11. Testing Suite**
+- **Matrix Inversion Tests**
+- **Forward Transform Tests**
+- **Inverse Transform Tests**
+- **Entanglement Tests**
+- **Metadata/View Tests**
+- **Metrics Tests**
+- **Export Tests**
+- **Closed‑Loop Validation**
+
+---
+
+## **12. Schema & Codegen**
+- **USM JSON Schema**
+- **Schema‑Driven Code Generator**
+- **CI Integration**
+- **Schema‑Driven Docs Generator**
+- **Schema‑Driven Test Generator**
+- **Graphviz Dependency Graph**
+
+---
+
+# **🎯 This is the complete ToC for the project as of now.**
+
+If you want, I can also generate:
+
+- **A navigable HTML version of this ToC**  
+- **A collapsible tree view (JSON or YAML)**  
+- **A versioned ToC (ToC‑v1.1, v1.2…)**  
+- **A ToC diff engine** to track structural evolution over time  
+
+Just tell me where you want to take it next.
