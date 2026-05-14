@@ -1,0 +1,159 @@
+The **Input Log** is the subsystem that records the *exact causes* of every state transition in your 10‑dimensional engine.  
+If the **Coordinate Log** tells you *what happened* and the **Metrics Log** tells you *how well it happened*, the Input Log tells you **why it happened** — the full causal fingerprint of each transform step.
+
+Below is the complete, structured, DAMMS‑aligned explanation, with deep causal clarity and explicit linkages to the rest of your architecture.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The **Input Log** is:
+
+> **A step‑indexed, schema‑driven record of every delta, matrix snapshot, entanglement configuration, and metadata input that caused each forward or inverse transform.**
+
+It is the **causal backbone** of replay, debugging, and scientific auditability.
+
+---
+
+## **📌 What the Input Log *is***  
+A structured log entry generated **once per transform step**, containing:
+
+- **delta_axis** — which dimension changed  
+- **delta_value** — how much it changed  
+- **matrix_snapshot** — the exact 11×11 DecaMatrix used  
+- **entanglement_snapshot** — all active bonds at that step  
+- **metadata** — mode, user action, transform context  
+- **step_index** — aligns with Coordinate + Metrics logs  
+- **node_id** — identifies the Ten‑D Node  
+
+This is the **complete causal state** of the transform.
+
+---
+
+## **🧩 Internal Structure of an Input Log Entry**
+
+```json
+{
+  "node_id": "Node_10D_Master",
+  "step_index": 42,
+  "delta_axis": 3,
+  "delta_value": 0.5,
+  "matrix_snapshot": [...121 values...],
+  "entanglement_snapshot": [
+    {"source_dim": 3, "target_dim": 7, "ratio": 0.42, "type": "linear"}
+  ],
+  "metadata": {
+    "mode": "forward",
+    "user_action": "delta_apply"
+  }
+}
+```
+
+Each field is defined in the **USM Schema Architecture** and validated by the engine.
+
+---
+
+## **⚙️ What the Input Log *does***  
+
+### **1. Enables deterministic replay**  
+The **Replay Engine** uses the Input Log to reconstruct:
+
+- the exact DecaMatrix  
+- the exact entanglement configuration  
+- the exact delta applied  
+- the exact metadata context  
+
+This guarantees **bit‑for‑bit reproducibility**.
+
+---
+
+### **2. Supports transform debugging**  
+When a transform misbehaves, the Input Log reveals:
+
+- which delta triggered the anomaly  
+- which bonds were active  
+- whether the matrix was ill‑conditioned  
+- whether metadata influenced the step  
+
+It is the **root‑cause analysis layer**.
+
+---
+
+### **3. Provides causal context for visualization**  
+The **Interactive Visualizer** uses Input Log data to annotate:
+
+- when deltas were applied  
+- how entanglement changed  
+- how matrix structure evolved  
+
+This produces **annotated trajectories**.
+
+---
+
+### **4. Enables scientific auditability**  
+Because every input is logged:
+
+- transforms are reproducible  
+- experiments are repeatable  
+- anomalies are explainable  
+- stability regimes are traceable  
+
+This is essential for DAMMS‑grade governance.
+
+---
+
+## **📊 How the Input Log appears in the database**
+
+```sql
+CREATE TABLE ten_d_input_log (
+    id BIGSERIAL PRIMARY KEY,
+    node_id TEXT NOT NULL,
+    step_index BIGINT NOT NULL,
+    delta_axis INT,
+    delta_value DOUBLE PRECISION,
+    matrix_snapshot DOUBLE PRECISION[],
+    entanglement_snapshot JSONB,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+This schema ensures:
+
+- complete causal capture  
+- replay‑safe persistence  
+- alignment with other logs  
+
+---
+
+## **🧠 How the Input Log interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Replay Engine** | Reconstructs exact inputs for each step |
+| **Transform Engine** | Writes deltas + matrix + bonds |
+| **Visualizer** | Annotates trajectories with input events |
+| **Differential Analyzer** | Correlates Δ‑vectors with deltas |
+| **Benchmark Harness** | Records input patterns |
+| **Testing Suite** | Validates input → output correctness |
+
+The Input Log is the **causal spine** of the engine.
+
+---
+
+## **🎯 Final Summary**
+
+The **Input Log** is:
+
+> **A complete, step‑indexed record of all deltas, matrices, entanglement states, and metadata that caused each transform — enabling deterministic replay, debugging, visualization, and scientific auditability.**
+
+It is the **why** behind every state change.
+
+---
+
+If you want, we can continue with:
+
+- **Coordinate Log**  
+- **Metrics Log**  
+- **Entanglement Bonds**  
+
+Which subsystem should we explore next?
