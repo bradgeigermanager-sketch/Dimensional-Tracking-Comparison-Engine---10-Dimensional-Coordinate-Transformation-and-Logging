@@ -1,0 +1,181 @@
+A **DecaMatrix** is the *mathematical heart* of your 10‑dimensional engine — the structure that determines how a **Ten‑D Node** evolves, how entanglement propagates, how reversibility is measured, and how the entire system maintains deterministic, replay‑safe behavior.
+
+Below is the full, operator‑grade explanation — clean, structured, and aligned with your USM architecture.
+
+---
+
+# **📐 What the DecaMatrix *is***  
+A **DecaMatrix** is an **11×11 affine transform matrix** that acts on a 10‑dimensional state vector plus a homogeneous coordinate.
+
+It is the engine’s equivalent of a *physics operator*:
+
+- It defines how the system moves  
+- It defines how dimensions influence each other  
+- It defines how entanglement propagates  
+- It defines how the inverse transform is computed  
+- It defines the stability regime of the node  
+
+It is the **governing law** for a node’s evolution.
+
+---
+
+# **🧩 Structure of the DecaMatrix**
+
+A DecaMatrix has **11 rows × 11 columns**:
+
+- 10 state dimensions  
+- 1 homogeneous coordinate (for affine shifts)
+
+\[
+A \in \mathbb{R}^{11 \times 11}
+\]
+
+The transform applied is:
+
+\[
+x' = A \cdot x
+\]
+
+Where:
+
+- \(x\) is the 11‑element augmented vector  
+- \(x'\) is the transformed state  
+
+---
+
+# **🔧 Why 11×11 instead of 10×10?**
+
+Because the system supports **affine transforms**, not just linear ones.
+
+The extra dimension allows:
+
+- constant offsets  
+- bias terms  
+- entanglement‑driven shifts  
+- reversible affine adjustments  
+
+This is the same trick used in computer graphics, robotics, and physics engines — but extended to 10 dimensions.
+
+---
+
+# **⚙️ What the DecaMatrix *does***  
+
+## **1. Forward Transform**
+The DecaMatrix defines how the node evolves:
+
+- rotation  
+- scaling  
+- shear  
+- cross‑dimensional mixing  
+- affine shifts  
+
+This is the **forward physics** of the system.
+
+---
+
+## **2. Inverse Transform**
+The DecaMatrix is invertible (by design), so:
+
+\[
+x = A^{-1} x'
+\]
+
+This is how the engine performs:
+
+- reversibility checks  
+- stability analysis  
+- chaos detection  
+- replay validation  
+
+The inverse is computed via a fully unrolled Gaussian elimination.
+
+---
+
+## **3. Entanglement Propagation**
+Entanglement bonds modify the DecaMatrix before each transform.
+
+This allows:
+
+- dimension‑to‑dimension influence  
+- nonlinear coupling  
+- constraint propagation  
+
+The DecaMatrix is the **carrier** of entanglement.
+
+---
+
+## **4. Stability & Chaos Regimes**
+The DecaMatrix determines:
+
+- condition number  
+- determinant  
+- eigenvalue spectrum  
+
+These metrics tell you whether the system is:
+
+- stable  
+- marginal  
+- chaotic  
+
+This is why the DecaMatrix is logged and monitored.
+
+---
+
+# **📊 How the DecaMatrix appears in the database**
+
+A typical representation:
+
+```sql
+decamatrix DOUBLE PRECISION[]  -- length = 121
+```
+
+Flattened row‑major:
+
+```
+[a00, a01, ..., a010,
+ a10, a11, ..., a110,
+ ...
+ a100, a101, ..., a1010]
+```
+
+This makes it:
+
+- easy to store  
+- easy to export  
+- easy to reconstruct  
+
+---
+
+# **🧠 How the DecaMatrix interacts with the system**
+
+| Subsystem | Role of the DecaMatrix |
+|----------|-------------------------|
+| **Transform Engine** | Applies forward/inverse transforms |
+| **Entanglement Layer** | Injects cross‑dimensional coupling |
+| **Metrics Layer** | Computes condition, determinant |
+| **Replay Engine** | Reconstructs transforms exactly |
+| **Visualizer** | Projects trajectories |
+| **Differential Analyzer** | Measures Δ‑vectors |
+| **Testing Suite** | Validates forward/inverse correctness |
+
+It is the **central mathematical object** of the entire engine.
+
+---
+
+# **🎯 Summary (the essence)**
+
+A **DecaMatrix** is:
+
+> **An 11×11 affine transform matrix that governs the evolution, reversibility, stability, and entanglement behavior of a Ten‑D Node.**
+
+It is the **physics operator** of your 10‑dimensional system.
+
+---
+
+If you want, I can now explain:
+
+- **Entanglement Bonds**  
+- **View Manifold**  
+- **Coordinate Log**  
+
+Which one should we dive into next?
