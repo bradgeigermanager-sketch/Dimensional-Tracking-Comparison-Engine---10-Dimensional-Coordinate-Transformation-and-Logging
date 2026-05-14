@@ -1,0 +1,184 @@
+Here’s all three—tight, operational, and ready to drop into your repo.
+
+---
+
+### 1. Graphviz dependency graph (USM DOT)
+
+`usm_graph.dot`:
+
+```dot
+digraph USM {
+  rankdir=LR;
+  node [shape=box, style=rounded];
+
+  core_entities           [label="Core Entities"];
+  transform_engine        [label="Transform Engine"];
+  logging_and_persistence [label="Logging & Persistence"];
+  replay_engine           [label="Replay Engine"];
+  benchmark_harness       [label="Benchmark Harness"];
+  export_pipelines        [label="Export Pipelines"];
+  visualization_suite     [label="Visualization Suite"];
+  instrumentation_layer   [label="Instrumentation Layer"];
+  differential_analyzer   [label="Differential Analyzer"];
+  dashboarding            [label="Dashboarding"];
+  python_client_layer     [label="Python Client Layer"];
+  testing_suite           [label="Testing Suite"];
+
+  core_entities -> transform_engine;
+  transform_engine -> logging_and_persistence;
+  logging_and_persistence -> replay_engine;
+  logging_and_persistence -> benchmark_harness;
+  logging_and_persistence -> export_pipelines;
+  logging_and_persistence -> visualization_suite;
+  logging_and_persistence -> differential_analyzer;
+
+  instrumentation_layer -> logging_and_persistence;
+  instrumentation_layer -> dashboarding;
+
+  benchmark_harness -> export_pipelines;
+  benchmark_harness -> testing_suite;
+
+  visualization_suite -> dashboarding;
+
+  python_client_layer -> transform_engine;
+  python_client_layer -> replay_engine;
+  python_client_layer -> visualization_suite;
+
+  testing_suite -> transform_engine;
+  testing_suite -> logging_and_persistence;
+  testing_suite -> instrumentation_layer;
+}
+```
+
+Render with:
+
+```bash
+dot -Tpng usm_graph.dot -o usm_graph.png
+```
+
+---
+
+### 2. Schema‑driven documentation generator (Markdown)
+
+`generate_usm_docs.py`:
+
+```python
+import json
+from pathlib import Path
+
+SCHEMA_PATH = Path("usm_v1_schema.json")
+OUT_MD = Path("USM_MANIFEST.md")
+
+
+def title_from_key(key: str) -> str:
+    return " ".join(part.capitalize() for part in key.split("_"))
+
+
+def generate_markdown(schema):
+    lines = []
+    lines.append(f"# USM Manifest — {schema.get('title', 'USM')}")
+    lines.append("")
+    lines.append(schema.get("description", ""))
+    lines.append("")
+
+    for section_key, section_obj in schema.get("properties", {}).items():
+        lines.append(f"## {title_from_key(section_key)}")
+        lines.append("")
+        props = section_obj.get("properties", {})
+        if not props:
+            lines.append("_No fields defined._")
+            lines.append("")
+            continue
+        for field_key in props.keys():
+            lines.append(f"- **{field_key}**")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def main():
+    schema = json.loads(SCHEMA_PATH.read_text())
+    md = generate_markdown(schema)
+    OUT_MD.write_text(md)
+    print(f"Wrote {OUT_MD}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Run:
+
+```bash
+python generate_usm_docs.py
+```
+
+You get `USM_MANIFEST.md` with a clean section/field overview.
+
+---
+
+### 3. Schema‑driven test generator (pytest stubs)
+
+`generate_usm_tests.py`:
+
+```python
+import json
+from pathlib import Path
+
+SCHEMA_PATH = Path("usm_v1_schema.json")
+OUT_TEST = Path("test_usm_manifest_structure.py")
+
+
+def main():
+    schema = json.loads(SCHEMA_PATH.read_text())
+    sections = list(schema.get("properties", {}).keys())
+
+    lines = [
+        "import json",
+        "from pathlib import Path",
+        "",
+        "SCHEMA_PATH = Path('usm_v1_schema.json')",
+        "",
+        "",
+        "def load_schema():",
+        "    return json.loads(SCHEMA_PATH.read_text())",
+        "",
+        "",
+        "def test_usm_has_required_sections():",
+        "    schema = load_schema()",
+        "    props = set(schema.get('properties', {}).keys())",
+        f"    expected = {sections!r}",
+        "    for sec in expected:",
+        "        assert sec in props, f'Missing section: {sec}'",
+        "",
+    ]
+
+    for sec in sections:
+        lines.append(f"def test_section_{sec}_has_properties():")
+        lines.append("    schema = load_schema()")
+        lines.append(f"    sec = schema['properties']['{sec}']")
+        lines.append("    assert 'properties' in sec")
+        lines.append("    assert isinstance(sec['properties'], dict)")
+        lines.append("    assert len(sec['properties']) > 0")
+        lines.append("")
+
+    OUT_TEST.write_text("\n".join(lines))
+    print(f"Wrote {OUT_TEST}")
+
+
+if __name__ == '__main__':
+    main()
+```
+
+Run:
+
+```bash
+python generate_usm_tests.py
+pytest -q
+```
+
+You now have:
+
+- A visual dependency graph  
+- Auto‑generated manifest docs  
+- Auto‑generated structural tests tied to the schema.
