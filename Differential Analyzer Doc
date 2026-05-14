@@ -1,0 +1,178 @@
+The **Differential Analyzer** is the subsystem that exposes the *texture* of your 10‑dimensional engine’s motion — the fine‑grained, step‑to‑step structure that reveals stability, drift, resonance, entanglement behavior, and chaotic transitions.  
+If the **Coordinate Log** is the flight recorder and the **Metrics Log** is the instrument panel, the Differential Analyzer is the **microscope**.
+
+Below is the full, structured, DAMMS‑aligned explanation — deep, precise, and ready for integration into your nonlinear diagnostics workflows.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The **Differential Analyzer** is:
+
+> **A Δ‑based diagnostic engine that computes per‑step changes, magnitudes, and statistical patterns from the Coordinate Log to reveal stability, drift, entanglement signatures, and chaotic behavior.**
+
+It is the **local dynamics** layer of your architecture.
+
+---
+
+## **📌 What the Differential Analyzer *is***  
+A subsystem that computes:
+
+- **Δ‑vectors** — per‑dimension change between steps  
+- **Δ‑norms** — magnitude of change  
+- **Δ‑statistics** — mean, max, variance  
+- **Δ‑patterns** — entanglement‑driven signatures  
+- **Δ‑anomalies** — spikes, drift, blow‑up indicators  
+
+It transforms raw state vectors into **motion descriptors**.
+
+---
+
+## **🧩 How the Differential Analyzer Works**
+
+### **1. Load consecutive Coordinate Log entries**
+From the **Coordinate Log**:
+
+\[
+x_t,\; x_{t+1}
+\]
+
+Each is a 10‑dimensional vector.
+
+---
+
+### **2. Compute the Δ‑vector**
+\[
+\Delta x = x_{t+1} - x_t
+\]
+
+This is the **per‑dimension motion**.
+
+---
+
+### **3. Compute the Δ‑norm**
+\[
+\|\Delta x\| = \sqrt{\sum_i (\Delta x_i)^2}
+\]
+
+This is the **magnitude** of the step.
+
+---
+
+### **4. Compute summary statistics**
+Across the entire trajectory:
+
+- mean Δ‑norm  
+- max Δ‑norm  
+- per‑dimension mean  
+- per‑dimension max |Δ|  
+- variance  
+- entanglement‑correlated Δ patterns  
+
+These form the **motion fingerprint** of the node.
+
+---
+
+### **5. Detect anomalies**
+The analyzer flags:
+
+- Δ‑norm spikes  
+- irregular Δ‑patterns  
+- drift (monotonic Δ bias)  
+- blow‑up (rapid Δ growth)  
+- entanglement resonance (oscillatory Δ patterns)  
+
+These are early warnings of instability.
+
+---
+
+## **📊 What the Differential Analyzer Reveals**
+
+### **1. Stability vs Chaos**
+Stable systems → small, smooth Δ‑patterns  
+Chaotic systems → large, irregular Δ‑patterns  
+
+This is your **Lyapunov‑adjacent signal**.
+
+---
+
+### **2. Entanglement Behavior**
+Entanglement bonds create predictable Δ‑signatures:
+
+- excitatory → amplified Δ in target dimension  
+- inhibitory → suppressed Δ  
+- resonant → oscillatory Δ patterns  
+
+The analyzer makes these patterns visible.
+
+---
+
+### **3. Drift & Blow‑Up**
+Drift → Δ‑norm slowly increases  
+Blow‑up → Δ‑norm spikes rapidly  
+
+These are critical for stability classification.
+
+---
+
+### **4. Regime Transitions**
+The analyzer detects transitions between:
+
+- stable → resonant  
+- resonant → chaotic  
+- chaotic → collapsing  
+- drifting → stabilized  
+
+This is essential for nonlinear diagnostics.
+
+---
+
+## **📐 Example Δ‑Computation (Conceptual)**
+
+```python
+deltas = vecs[1:] - vecs[:-1]          # (N-1, 10)
+delta_norms = np.linalg.norm(deltas, axis=1)
+
+summary = {
+    "mean_delta_norm": float(delta_norms.mean()),
+    "max_delta_norm": float(delta_norms.max()),
+    "per_dim_mean": deltas.mean(axis=0).tolist(),
+    "per_dim_max_abs": np.abs(deltas).max(axis=0).tolist()
+}
+```
+
+This is the canonical Δ‑engine.
+
+---
+
+## **🧠 How the Differential Analyzer interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Coordinate Log** | Supplies raw state vectors |
+| **Metrics Log** | Correlates Δ‑norms with stability metrics |
+| **Visualizer** | Renders Δ‑norm heatmaps & motion trails |
+| **3D Attractor View** | Uses Δ‑patterns to color trajectories |
+| **Benchmark Harness** | Computes Δ‑statistics across runs |
+| **Testing Suite** | Validates Δ‑consistency |
+
+The Differential Analyzer is the **motion analysis layer** of the engine.
+
+---
+
+## **🎯 Final Summary**
+
+The **Differential Analyzer** is:
+
+> **A Δ‑based diagnostic subsystem that computes per‑step changes, magnitudes, and statistical patterns to reveal stability, drift, entanglement behavior, and chaotic transitions in the 10‑dimensional engine.**
+
+It is the engine’s **microscope**, exposing the fine structure of its dynamics.
+
+---
+
+If you want to continue the chain, the next natural subsystems are:
+
+- **Projection Modes**  
+- **View Manifold**  
+- **Grafana Dashboard**  
+
+Which one should we explore next?
