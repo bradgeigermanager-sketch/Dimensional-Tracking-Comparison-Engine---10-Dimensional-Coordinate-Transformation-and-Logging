@@ -1,0 +1,106 @@
+Absolutely, Brad — here is the **full, explicit, unrolled 11×11 DecaMatrix multiply**, written cleanly, deterministically, and ready to drop into your PostgreSQL procedure. No loops, no omissions, no abstractions — the complete 121‑term expansion.
+
+This is the exact “full version” you asked for.
+
+---
+
+# 🔢 **Full 11×11 Matrix Multiply (Unrolled)**  
+*(Replace your step 5 with this block)*
+
+```sql
+----------------------------------------------------------------------
+-- 5. Multiply by 11×11 matrix (FULLY UNROLLED, ALL 121 TERMS)
+----------------------------------------------------------------------
+v_new_aug := ARRAY[
+
+    -- Row 1
+    v_matrix[1]*v_aug[1]  + v_matrix[2]*v_aug[2]  + v_matrix[3]*v_aug[3]  +
+    v_matrix[4]*v_aug[4]  + v_matrix[5]*v_aug[5]  + v_matrix[6]*v_aug[6]  +
+    v_matrix[7]*v_aug[7]  + v_matrix[8]*v_aug[8]  + v_matrix[9]*v_aug[9]  +
+    v_matrix[10]*v_aug[10] + v_matrix[11]*v_aug[11],
+
+    -- Row 2
+    v_matrix[12]*v_aug[1] + v_matrix[13]*v_aug[2] + v_matrix[14]*v_aug[3] +
+    v_matrix[15]*v_aug[4] + v_matrix[16]*v_aug[5] + v_matrix[17]*v_aug[6] +
+    v_matrix[18]*v_aug[7] + v_matrix[19]*v_aug[8] + v_matrix[20]*v_aug[9] +
+    v_matrix[21]*v_aug[10] + v_matrix[22]*v_aug[11],
+
+    -- Row 3
+    v_matrix[23]*v_aug[1] + v_matrix[24]*v_aug[2] + v_matrix[25]*v_aug[3] +
+    v_matrix[26]*v_aug[4] + v_matrix[27]*v_aug[5] + v_matrix[28]*v_aug[6] +
+    v_matrix[29]*v_aug[7] + v_matrix[30]*v_aug[8] + v_matrix[31]*v_aug[9] +
+    v_matrix[32]*v_aug[10] + v_matrix[33]*v_aug[11],
+
+    -- Row 4
+    v_matrix[34]*v_aug[1] + v_matrix[35]*v_aug[2] + v_matrix[36]*v_aug[3] +
+    v_matrix[37]*v_aug[4] + v_matrix[38]*v_aug[5] + v_matrix[39]*v_aug[6] +
+    v_matrix[40]*v_aug[7] + v_matrix[41]*v_aug[8] + v_matrix[42]*v_aug[9] +
+    v_matrix[43]*v_aug[10] + v_matrix[44]*v_aug[11],
+
+    -- Row 5
+    v_matrix[45]*v_aug[1] + v_matrix[46]*v_aug[2] + v_matrix[47]*v_aug[3] +
+    v_matrix[48]*v_aug[4] + v_matrix[49]*v_aug[5] + v_matrix[50]*v_aug[6] +
+    v_matrix[51]*v_aug[7] + v_matrix[52]*v_aug[8] + v_matrix[53]*v_aug[9] +
+    v_matrix[54]*v_aug[10] + v_matrix[55]*v_aug[11],
+
+    -- Row 6
+    v_matrix[56]*v_aug[1] + v_matrix[57]*v_aug[2] + v_matrix[58]*v_aug[3] +
+    v_matrix[59]*v_aug[4] + v_matrix[60]*v_aug[5] + v_matrix[61]*v_aug[6] +
+    v_matrix[62]*v_aug[7] + v_matrix[63]*v_aug[8] + v_matrix[64]*v_aug[9] +
+    v_matrix[65]*v_aug[10] + v_matrix[66]*v_aug[11],
+
+    -- Row 7
+    v_matrix[67]*v_aug[1] + v_matrix[68]*v_aug[2] + v_matrix[69]*v_aug[3] +
+    v_matrix[70]*v_aug[4] + v_matrix[71]*v_aug[5] + v_matrix[72]*v_aug[6] +
+    v_matrix[73]*v_aug[7] + v_matrix[74]*v_aug[8] + v_matrix[75]*v_aug[9] +
+    v_matrix[76]*v_aug[10] + v_matrix[77]*v_aug[11],
+
+    -- Row 8
+    v_matrix[78]*v_aug[1] + v_matrix[79]*v_aug[2] + v_matrix[80]*v_aug[3] +
+    v_matrix[81]*v_aug[4] + v_matrix[82]*v_aug[5] + v_matrix[83]*v_aug[6] +
+    v_matrix[84]*v_aug[7] + v_matrix[85]*v_aug[8] + v_matrix[86]*v_aug[9] +
+    v_matrix[87]*v_aug[10] + v_matrix[88]*v_aug[11],
+
+    -- Row 9
+    v_matrix[89]*v_aug[1] + v_matrix[90]*v_aug[2] + v_matrix[91]*v_aug[3] +
+    v_matrix[92]*v_aug[4] + v_matrix[93]*v_aug[5] + v_matrix[94]*v_aug[6] +
+    v_matrix[95]*v_aug[7] + v_matrix[96]*v_aug[8] + v_matrix[97]*v_aug[9] +
+    v_matrix[98]*v_aug[10] + v_matrix[99]*v_aug[11],
+
+    -- Row 10
+    v_matrix[100]*v_aug[1] + v_matrix[101]*v_aug[2] + v_matrix[102]*v_aug[3] +
+    v_matrix[103]*v_aug[4] + v_matrix[104]*v_aug[5] + v_matrix[105]*v_aug[6] +
+    v_matrix[106]*v_aug[7] + v_matrix[107]*v_aug[8] + v_matrix[108]*v_aug[9] +
+    v_matrix[109]*v_aug[10] + v_matrix[110]*v_aug[11],
+
+    -- Row 11
+    v_matrix[111]*v_aug[1] + v_matrix[112]*v_aug[2] + v_matrix[113]*v_aug[3] +
+    v_matrix[114]*v_aug[4] + v_matrix[115]*v_aug[5] + v_matrix[116]*v_aug[6] +
+    v_matrix[117]*v_aug[7] + v_matrix[118]*v_aug[8] + v_matrix[119]*v_aug[9] +
+    v_matrix[120]*v_aug[10] + v_matrix[121]*v_aug[11]
+];
+```
+
+---
+
+# 🎯 What you now have
+
+A **complete, explicit, deterministic** 11×11 multiply block:
+
+- No loops  
+- No abstractions  
+- No missing rows  
+- Perfectly aligned with your DecaMatrix storage model  
+- Ready for DAMMS ingestion and audit  
+
+This is the exact form you want when you need **traceability**, **debuggability**, and **bit‑for‑bit reproducibility** across runs.
+
+---
+
+If you want, I can now generate:
+
+- **A NumPy-based validator** to confirm DB results match Python  
+- **A PL/pgSQL inverse-transform**  
+- **A full execution trace visualizer**  
+
+Just tell me which direction you want to push next.
