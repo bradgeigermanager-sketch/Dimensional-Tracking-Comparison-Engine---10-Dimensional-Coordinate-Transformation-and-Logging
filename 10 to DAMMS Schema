@@ -1,0 +1,185 @@
+### Overview
+
+Here’s a unified **10D → DAMMS schema** that turns your *Dimensional Tracking Comparison Engine* into a DAMMS-native, mesh-addressable model.
+
+> “This core logic manages the ten-vector state (x, y, z, w, v, u, q, p, s, f) and enables total system variance analysis.”  
+> “Dimensions not in selected_axes are treated as PROC-046 metadata.”
+
+---
+
+### 1. Top-level DAMMS entities
+
+- **Entity:** `10D_Node`
+- **Manifolds:** `State10D`, `EntanglementGraph`, `ViewManifold`, `TransformManifold`, `MetadataCache`
+- **Protocols:** `PROC_038_049` as rule-layer references
+
+```json
+{
+  "$id": "DAMMS.10D.Node",
+  "type": "object",
+  "title": "10D_Node",
+  "properties": {
+    "id": { "type": "string" },
+    "label": { "type": "string" },
+
+    "state_10d": {
+      "type": "object",
+      "title": "State10D",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" },
+        "w": { "type": "number" },
+        "v": { "type": "number" },
+        "u": { "type": "number" },
+        "q": { "type": "number" },
+        "p": { "type": "number" },
+        "s": { "type": "number" },
+        "f": { "type": "number" }
+      },
+      "required": ["x","y","z","w","v","u","q","p","s","f"],
+      "x_index_map": {
+        "x": 0, "y": 1, "z": 2, "w": 3, "v": 4,
+        "u": 5, "q": 6, "p": 7, "s": 8, "f": 9
+      }
+    },
+
+    "entanglement_graph": {
+      "type": "array",
+      "title": "EntanglementGraph",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source_dim": { "type": "string", "enum": ["x","y","z","w","v","u","q","p","s","f"] },
+          "target_dim": { "type": "string", "enum": ["x","y","z","w","v","u","q","p","s","f"] },
+          "ratio": { "type": "number", "default": 1.0 },
+          "bond_type": { "type": "string", "enum": ["linear","inverse"] },
+          "proc_ref": { "type": "string", "enum": ["PROC-048","PROC-049"] }
+        },
+        "required": ["source_dim","target_dim","ratio","bond_type"]
+      },
+      "x_recursion_limit": 1
+    },
+
+    "view_manifold": {
+      "type": "object",
+      "title": "ViewManifold",
+      "properties": {
+        "active_axes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["x","y","z","w","v","u","q","p","s","f"] },
+          "maxItems": 3
+        },
+        "projection_target_dims": { "type": "integer", "enum": [2,3], "default": 3 },
+        "proc_ref": { "type": "string", "enum": ["PROC-044","PROC-045"] }
+      },
+      "required": ["active_axes"]
+    },
+
+    "transform_manifold": {
+      "type": "object",
+      "title": "TransformManifold",
+      "properties": {
+        "matrix_11x11": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 11,
+            "maxItems": 11
+          },
+          "minItems": 11,
+          "maxItems": 11
+        },
+        "proc_ref": { "type": "string", "enum": ["PROC-041"] }
+      }
+    },
+
+    "metadata_cache": {
+      "type": "object",
+      "title": "MetadataCache",
+      "properties": {
+        "invisible_dims": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["x","y","z","w","v","u","q","p","s","f"] }
+        },
+        "full_vector": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 10,
+          "maxItems": 10
+        },
+        "proc_ref": { "type": "string", "enum": ["PROC-046"] }
+      }
+    },
+
+    "metrics": {
+      "type": "object",
+      "title": "DerivedMetrics",
+      "properties": {
+        "total_system_variance": { "type": "number" },
+        "last_delta_axis": { "type": "string" },
+        "last_delta_value": { "type": "number" }
+      }
+    }
+  },
+  "required": ["id","state_10d"]
+}
+```
+
+---
+
+### 2. DAMMS relation layer
+
+- **R_Entangle:** `10D_Node.state_10d[dim_a] → 10D_Node.state_10d[dim_b]` with `ratio`, `bond_type`, `PROC-048`, `PROC-049`.
+- **R_Project:** `State10D → ViewManifold` with `active_axes`, `projection_target_dims`, `PROC-044`, `PROC-045`.
+- **R_Transform:** `State10D × TransformManifold.matrix_11x11 → State10D'` (DecaMatrix).
+- **R_Metadata:** `State10D → MetadataCache` for inactive axes (PROC‑046).
+
+You can think of each as a DAMMS rule-layer:
+
+- **Layer C (Constraints):** Entanglement graph + recursion limit.  
+- **Layer T (Transforms):** DecaMatrix operations.  
+- **Layer V (Views):** Collapse/selection into visible manifold.  
+- **Layer M (Metadata):** Preservation of hidden dimensions.
+
+---
+
+### 3. CSV/JSON alignment
+
+- **CSV header (storage):**  
+  `id,x,y,z,w,v,u,q,p,s,f,label`  
+- **JSON object (API / DAMMS node):**  
+  Maps directly into `10D_Node.state_10d` + `label`.
+
+---
+
+### 4. Minimal example instance
+
+```json
+{
+  "id": "Node_10D_Master",
+  "label": "Deca_Fidelity_Node",
+  "state_10d": {
+    "x": 10.5,
+    "y": 20.0,
+    "z": 5.0,
+    "w": 1.0,
+    "v": 98.6,
+    "u": 0.45,
+    "q": 0.88,
+    "p": 0.99,
+    "s": 0.72,
+    "f": 120.5
+  },
+  "entanglement_graph": [],
+  "view_manifold": {
+    "active_axes": ["x","y","f"],
+    "projection_target_dims": 3
+  }
+}
+```
+
+---
+
+If you want, next step I can: **(a)** add a rule-language overlay (pseudo-DAMMS DSL) for these relations, or **(b)** map this schema into a concrete storage model (Postgres + JSONB, or graph DB) for live execution. Which one pulls you more right now?
