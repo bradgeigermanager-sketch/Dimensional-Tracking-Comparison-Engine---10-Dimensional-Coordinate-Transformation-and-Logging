@@ -1,0 +1,116 @@
+Here’s a **minimal, operational schema‑driven code generator** that takes the USM JSON Schema and emits:
+
+- Python `@dataclass` structures  
+- TypeScript interfaces  
+
+You can extend it, but this is already runnable and useful.
+
+---
+
+### `generate_from_usm_schema.py`
+
+```python
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Any
+
+
+USM_SCHEMA_PATH = Path("usm_v1_schema.json")
+OUT_PY = Path("usm_manifest_models.py")
+OUT_TS = Path("usm_manifest_models.ts")
+
+
+def load_schema(path: Path) -> Dict[str, Any]:
+    with path.open() as f:
+        return json.load(f)
+
+
+def gen_python_dataclasses(schema: Dict[str, Any]) -> str:
+    props = schema["properties"]
+
+    lines = [
+        "from dataclasses import dataclass",
+        "from typing import Optional",
+        "",
+        "# Auto-generated from USM-v1.0 schema",
+        ""
+    ]
+
+    def emit_class(name: str, obj: Dict[str, Any]):
+        lines.append(f"@dataclass")
+        lines.append(f"class {name}:")
+        props = obj.get("properties", {})
+        if not props:
+            lines.append("    pass")
+            lines.append("")
+            return
+        for field_name in props.keys():
+            lines.append(f"    {field_name}: Optional[str] = None")
+        lines.append("")
+
+    for top_name, top_obj in props.items():
+        class_name = "".join(part.capitalize() for part in top_name.split("_"))
+        emit_class(class_name, top_obj)
+
+    return "\n".join(lines)
+
+
+def gen_typescript_interfaces(schema: Dict[str, Any]) -> str:
+    props = schema["properties"]
+
+    lines = [
+        "// Auto-generated from USM-v1.0 schema",
+        ""
+    ]
+
+    def emit_interface(name: str, obj: Dict[str, Any]):
+        lines.append(f"export interface {name} " + "{")
+        props = obj.get("properties", {})
+        for field_name in props.keys():
+            lines.append(f"  {field_name}?: string;")
+        lines.append("}")
+        lines.append("")
+
+    for top_name, top_obj in props.items():
+        iface_name = "".join(part.capitalize() for part in top_name.split("_"))
+        emit_interface(iface_name, top_obj)
+
+    return "\n".join(lines)
+
+
+def main():
+    schema = load_schema(USM_SCHEMA_PATH)
+
+    py_code = gen_python_dataclasses(schema)
+    OUT_PY.write_text(py_code)
+    print(f"Wrote Python models to {OUT_PY}")
+
+    ts_code = gen_typescript_interfaces(schema)
+    OUT_TS.write_text(ts_code)
+    print(f"Wrote TypeScript models to {OUT_TS}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Usage:
+
+1. Save your USM schema as `usm_v1_schema.json`.  
+2. Run:
+
+```bash
+python generate_from_usm_schema.py
+```
+
+You’ll get:
+
+- `usm_manifest_models.py` — Python dataclasses  
+- `usm_manifest_models.ts` — TypeScript interfaces  
+
+If you want, we can next:
+
+- Add nested type generation (e.g., `TransformEngine` containing sub‑classes)  
+- Generate SQL DDL stubs from the schema  
+- Wire this into CI so schema changes auto‑regenerate code.
