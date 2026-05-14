@@ -1,0 +1,157 @@
+The **Input Log** is the subsystem that captures *exactly what was fed into the engine* at every step — the deltas, matrices, and entanglement states that *caused* the transform.  
+If the **Coordinate Log** records *what happened*, the **Input Log** records *why it happened*.
+
+It is the **causal trace** of your 10‑dimensional engine.
+
+---
+
+# **📌 What the Input Log *is***  
+A structured, step‑indexed record of **all inputs** that shaped a transform:
+
+- **dimension deltas**  
+- **DecaMatrix snapshot**  
+- **Entanglement Bond snapshot**  
+- **metadata used during the transform**  
+
+It is the **ground truth input layer** for replay, debugging, and auditability.
+
+---
+
+# **📐 Internal Structure of an Input Log Entry**
+
+Each entry contains:
+
+- **step_index** — aligns with Coordinate Log + Metrics Log  
+- **delta_axis** — which dimension was changed  
+- **delta_value** — how much it changed  
+- **matrix_snapshot** — the exact 11×11 DecaMatrix used  
+- **entanglement_snapshot** — all bonds active at that step  
+- **metadata** — optional transform‑specific context  
+
+In JSON form:
+
+```json
+{
+  "node_id": "Node_10D_Master",
+  "step_index": 42,
+  "delta_axis": 3,
+  "delta_value": 0.5,
+  "matrix_snapshot": [...121 values...],
+  "entanglement_snapshot": [
+    {"source_dim": 3, "target_dim": 7, "ratio": 0.42, "type": "linear"}
+  ],
+  "metadata": {
+    "mode": "forward",
+    "user_action": "delta_apply"
+  }
+}
+```
+
+This is the **complete causal fingerprint** of the step.
+
+---
+
+# **⚙️ What the Input Log *does***  
+
+## **1. Enables perfect replay**
+The Replay Engine uses the Input Log to reconstruct:
+
+- the exact DecaMatrix  
+- the exact entanglement configuration  
+- the exact delta applied  
+
+This guarantees **bit‑for‑bit deterministic replay**.
+
+---
+
+## **2. Supports transform debugging**
+If a transform misbehaves, the Input Log reveals:
+
+- which delta triggered it  
+- which bonds were active  
+- whether the matrix was ill‑conditioned  
+- whether metadata influenced the step  
+
+It is the **root‑cause analysis layer**.
+
+---
+
+## **3. Provides causal context for visualization**
+The visualizer can show:
+
+- when deltas were applied  
+- how entanglement changed  
+- how matrix structure evolved  
+
+This is how you get **annotated trajectories**.
+
+---
+
+## **4. Enables scientific auditability**
+Because every input is logged:
+
+- transforms are reproducible  
+- experiments are repeatable  
+- anomalies are explainable  
+- stability regimes are traceable  
+
+This is essential for DAMMS‑style governance.
+
+---
+
+# **📊 How the Input Log appears in the database**
+
+```sql
+CREATE TABLE ten_d_input_log (
+    id BIGSERIAL PRIMARY KEY,
+    node_id TEXT NOT NULL,
+    step_index BIGINT NOT NULL,
+    delta_axis INT,
+    delta_value DOUBLE PRECISION,
+    matrix_snapshot DOUBLE PRECISION[],
+    entanglement_snapshot JSONB,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+This schema ensures:
+
+- complete causal capture  
+- replay‑safe persistence  
+- alignment with other logs  
+
+---
+
+# **🧠 How the Input Log interacts with the system**
+
+| Subsystem | How it uses the Input Log |
+|----------|----------------------------|
+| **Replay Engine** | Reconstructs exact inputs for each step |
+| **Transform Engine** | Writes deltas + matrix + bonds |
+| **Visualizer** | Annotates trajectories with input events |
+| **Differential Analyzer** | Correlates Δ‑vectors with deltas |
+| **Benchmark Harness** | Records input patterns |
+| **Testing Suite** | Validates input → output correctness |
+
+It is the **causal backbone** of the engine.
+
+---
+
+# **🎯 Summary (the essence)**
+
+An **Input Log** is:
+
+> **A complete, step‑indexed record of all deltas, matrices, entanglement states, and metadata that caused each transform — enabling deterministic replay, debugging, and scientific auditability.**
+
+It is the **why** behind every state change.
+
+---
+
+If you want, we can continue with:
+
+- **Reversible Execution**  
+- **Benchmark Harness**  
+- **Differential Analyzer**  
+
+Which one should we explore next?
