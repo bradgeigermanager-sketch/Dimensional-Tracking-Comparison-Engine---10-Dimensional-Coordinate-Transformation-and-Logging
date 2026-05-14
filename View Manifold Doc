@@ -1,0 +1,172 @@
+The **View Manifold** is the subsystem that gives your 10‑dimensional engine its *eyes* — the structured interpretation layer that decides **how a Ten‑D Node is seen, labeled, projected, and understood** across every visualization, analyzer, and replay tool.  
+If the **Coordinate Log** captures *where the system is*, the View Manifold captures **what that state *means***.
+
+Below is the complete, DAMMS‑aligned, deeply structured explanation — precise, layered, and ready for integration into your symbolic mesh workflows.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The **View Manifold** is:
+
+> **A structured interpretation layer that maps the raw 10‑dimensional state into visible axes, hidden axes, semantic labels, projections, and metadata used by all visualization and analysis subsystems.**
+
+It is the **semantic interface** of the engine.
+
+---
+
+## **🌐 What the View Manifold *is***  
+A JSON‑structured object attached to every Ten‑D Node that defines:
+
+- **visible_dims** — which dimensions appear in visualizers  
+- **hidden_dims** — which dimensions remain internal  
+- **labels** — semantic names for each dimension  
+- **projections** — PCA/UMAP/custom projections  
+- **metadata** — cluster tags, roles, annotations  
+- **view_modes** — presets for different visualization contexts  
+
+It is the **lens** through which the engine becomes interpretable.
+
+---
+
+## **🧩 Internal Structure of the View Manifold**
+
+```json
+{
+  "visible_dims": [0, 1, 2],
+  "hidden_dims": [3, 4, 5, 6, 7, 8, 9],
+  "labels": {
+    "0": "X-axis",
+    "1": "Y-axis",
+    "2": "Z-axis"
+  },
+  "projections": {
+    "pca_2d": [0.12, -0.44],
+    "umap_2d": [1.22, 0.88]
+  },
+  "metadata": {
+    "cluster": "A",
+    "role": "primary"
+  }
+}
+```
+
+This structure is defined in the **USM Schema Architecture**.
+
+---
+
+## **📐 What the View Manifold *does***  
+
+### **1. Controls what the user sees**
+The manifold determines:
+
+- which dimensions appear in the **Interactive Visualizer**  
+- which axes are available for selection  
+- which projections are precomputed  
+- which dimensions are suppressed  
+
+It is the **visibility contract**.
+
+---
+
+### **2. Provides semantic meaning**
+Dimensions can be labeled:
+
+- “velocity_x”  
+- “pressure”  
+- “latent_3”  
+- “entropy”  
+
+This allows the system to treat dimensions as **concepts**, not just numbers.
+
+---
+
+### **3. Stores projection modes**
+The manifold holds:
+
+- PCA‑2D  
+- PCA‑3D  
+- UMAP‑2D  
+- custom projections  
+
+These feed:
+
+- **Projection Modes**  
+- **3D Attractor View**  
+- the dashboard  
+
+---
+
+### **4. Enables metadata‑driven transforms**
+Some transforms depend on:
+
+- dimension roles  
+- visibility  
+- metadata flags  
+
+The View Manifold provides this context.
+
+---
+
+### **5. Supports replay and export**
+Because the manifold is logged:
+
+- every visualization is reproducible  
+- every projection is deterministic  
+- every export is consistent  
+
+This is essential for scientific reproducibility.
+
+---
+
+## **📊 How the View Manifold interacts with the system**
+
+| Subsystem | How it uses the View Manifold |
+|----------|--------------------------------|
+| **Interactive Visualizer** | Determines which axes to show |
+| **Projection Modes** | Stores PCA/UMAP results |
+| **3D Attractor View** | Uses PCA‑3D from the manifold |
+| **Differential Analyzer** | Uses dimension roles |
+| **Replay Engine** | Restores manifold per step |
+| **Metrics Log** | Correlates visibility with stability |
+| **Schema‑Driven Code Generator** | Generates typed manifold models |
+| **Schema‑Driven Docs Generator** | Documents manifold structure |
+
+The View Manifold is the **interpretation contract** for the node.
+
+---
+
+## **📦 Example: How the View Manifold shapes visualization**
+
+### **Without View Manifold**
+The visualizer sees only raw 10‑D numbers.
+
+### **With View Manifold**
+The visualizer sees:
+
+- labeled axes  
+- PCA projections  
+- semantic clusters  
+- hidden/visible dimension rules  
+- metadata overlays  
+
+This is the difference between **raw data** and **interpretable structure**.
+
+---
+
+## **🎯 Final Summary**
+
+The **View Manifold** is:
+
+> **A structured interpretation layer that defines how a Ten‑D Node’s 10‑dimensional state is viewed, labeled, projected, and understood across all visualization, analysis, and replay systems.**
+
+It is the **semantic lens** of your entire engine.
+
+---
+
+If you want to continue the chain, the next natural subsystems are:
+
+- **Projection Modes**  
+- **3D Attractor View**  
+- **Interactive Visualizer**  
+
+Which one should we explore next?
