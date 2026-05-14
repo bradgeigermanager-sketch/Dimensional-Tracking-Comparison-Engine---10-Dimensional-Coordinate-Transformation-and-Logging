@@ -1,0 +1,173 @@
+The **Schema‑Driven Test Generator** is the subsystem that turns your **USM JSON Schema** into a complete, deterministic, auto‑maintaining **test suite** — one that validates every object, every field, every constraint, and every generated artifact (code, docs, manifests, logs).  
+If the **Schema‑Driven Code Generator** is the compiler and the **Docs Generator** is the publisher, the Test Generator is the **auditor**: it ensures the entire system stays correct as the schema evolves.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The Schema‑Driven Test Generator is:
+
+> **A deterministic test‑generation engine that produces schema‑aligned unit tests, validation tests, round‑trip tests, and regression tests — ensuring the entire USM ecosystem remains correct, drift‑free, and reproducible.**
+
+It is the **self‑verification layer** of your architecture.
+
+---
+
+## **🧩 What the Test Generator Produces**
+
+Each schema object produces a **family of tests**, including:
+
+- **structure tests** — fields, types, cardinality  
+- **validation tests** — required fields, constraints  
+- **round‑trip tests** — encode → decode → encode  
+- **regression tests** — ensure no drift  
+- **migration tests** — ensure version upgrades work  
+- **projection tests** — PCA/UMAP metadata correctness  
+- **log‑schema tests** — coordinate/metrics/input logs  
+
+All generated automatically from the USM schema.
+
+---
+
+## **📐 How the Test Generator Works Internally**
+
+### **1. Load the USM JSON Schema**
+It reads:
+
+- object definitions  
+- field types  
+- constraints  
+- nested structures  
+- enums  
+- metadata  
+
+Same AST used by the **Schema‑Driven Code Generator**.
+
+---
+
+### **2. Build an Internal AST**
+The schema is converted into a structured representation:
+
+- objects  
+- fields  
+- constraints  
+- relationships  
+
+This AST drives test generation.
+
+---
+
+### **3. Emit Test Artifacts**
+
+The generator produces:
+
+### **Python (pytest)**
+- `test_tendnode_structure.py`  
+- `test_metrics_log_validation.py`  
+- `test_input_log_roundtrip.py`  
+- `test_entanglement_constraints.py`  
+
+### **TypeScript (Jest)**
+- `tendnode.spec.ts`  
+- `decamatrix.spec.ts`  
+- `projection_metadata.spec.ts`  
+
+### **Migration Tests**
+Generated for each version transition:
+
+- `test_migrate_1_3_0_to_1_4_0.py`  
+- `test_migrate_1_4_0_to_1_5_0.py`  
+
+### **Round‑Trip Tests**
+Generated for every object:
+
+- JSON → model → JSON  
+- model → JSON → model  
+
+These ensure **perfect reversibility**.
+
+---
+
+## **📦 Example Generated Test (Python)**
+
+```python
+def test_tendnode_structure():
+    node = TenDNode(
+        state_vector=[0.0] * 10,
+        decamatrix=[1.0] * 121,
+        entanglement=[],
+        metadata={}
+    )
+    assert len(node.state_vector) == 10
+    assert len(node.decamatrix) == 121
+```
+
+Generated automatically — no manual writing.
+
+---
+
+## **🧪 CI Integration**
+
+Your CI pipeline:
+
+- regenerates tests  
+- runs the entire suite  
+- blocks PRs if tests fail  
+- blocks PRs if tests are stale  
+- ensures schema changes are intentional  
+
+This creates a **self‑healing test pipeline**.
+
+---
+
+## **🧠 How the Test Generator interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **USM Schema** | Source of truth |
+| **Code Generator** | Tests validate generated code |
+| **Docs Generator** | Tests validate documentation correctness |
+| **Migration System** | Tests validate version upgrades |
+| **Replay Engine** | Tests validate round‑trip correctness |
+| **CI Pipeline** | Executes and enforces test suite |
+| **Benchmark Harness** | Uses tests for regression detection |
+
+The Test Generator is the **quality gate** of the architecture.
+
+---
+
+## **🛡️ Guarantees Provided by the Test Generator**
+
+### **1. Zero‑Drift**
+If schema changes → tests change → CI enforces correctness.
+
+### **2. Deterministic Behavior**
+Same schema → same tests → same results.
+
+### **3. Replay Safety**
+Round‑trip tests ensure logs and manifests are reversible.
+
+### **4. Migration Safety**
+Migration tests ensure version upgrades are correct.
+
+### **5. Auditability**
+Tests document the expected behavior of every object.
+
+---
+
+## **🎯 Final Summary**
+
+The **Schema‑Driven Test Generator** is:
+
+> **A deterministic, schema‑aligned test suite generator that validates structure, constraints, round‑trip behavior, migrations, and regressions — ensuring the entire USM ecosystem remains correct, stable, and drift‑free.**
+
+It is the **auditor** of your schema‑first architecture.
+
+---
+
+If you want, we can continue with:
+
+- **Graphviz Dependency Graph**  
+- **Structure Tests**  
+- **Migration Tests**  
+
+Which subsystem should we explore next?
