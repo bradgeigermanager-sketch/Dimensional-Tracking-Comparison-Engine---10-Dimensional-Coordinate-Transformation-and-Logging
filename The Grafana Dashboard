@@ -1,0 +1,151 @@
+The **Grafana Dashboard** is the *real‑time window* into your 10‑dimensional engine — the place where all telemetry, stability metrics, entanglement behavior, and performance characteristics become **live, visual, and diagnosable**.  
+If the **Metrics Log** is the instrument panel’s wiring, the Grafana Dashboard is the **instrument panel itself**.
+
+
+
+Below is the full, structured, DAMMS‑aligned explanation.
+
+---
+
+# **📐 What the Grafana Dashboard *is***  
+A **real‑time, Prometheus‑backed monitoring interface** that visualizes:
+
+- forward/inverse execution times  
+- matrix condition numbers  
+- reversible error  
+- entanglement activity  
+- Δ‑norm behavior  
+- state norms  
+- throughput and step rate  
+
+It is the **operational cockpit** of the engine.
+
+---
+
+# **🧩 What the Dashboard Shows (Core Panels)**
+
+Each panel corresponds to a metric emitted by the **Instrumentation Layer** and stored in the **Metrics Log**.
+
+### **1. Forward / Inverse Duration (ms)**  
+Shows latency per transform step.  
+Useful for:
+
+- performance regression detection  
+- hardware benchmarking  
+- load testing  
+
+### **2. Matrix Condition Number**  
+Shows numerical stability of the DecaMatrix.  
+High spikes indicate:
+
+- near‑singular transforms  
+- chaotic regimes  
+- entanglement resonance  
+
+### **3. Reversible Error**  
+The core stability metric.  
+Computed during **Reversible Execution**.
+
+### **4. Entanglement Activity**  
+Derived from:
+
+- entanglement_count  
+- entanglement_delta_sum  
+
+Shows how strongly dimensions influence each other.
+
+### **5. Δ‑Norm Trends**  
+Pulled from the **Differential Analyzer**.  
+Shows motion magnitude and drift.
+
+### **6. State Norm Evolution**  
+Tracks ||x|| over time.  
+Useful for detecting:
+
+- blow‑up  
+- drift  
+- contraction  
+
+---
+
+# **⚙️ How the Dashboard Works Internally**
+
+The pipeline is:
+
+1. **Instrumentation Layer** emits Prometheus metrics  
+2. Prometheus scrapes them  
+3. Grafana queries Prometheus  
+4. Panels render real‑time charts  
+
+This gives you:
+
+- sub‑second updates  
+- historical retention  
+- alerting  
+- multi‑node comparison  
+
+---
+
+# **📊 Example Panel Definitions (from your earlier config)**
+
+Your dashboard includes panels like:
+
+```json
+{
+  "type": "timeseries",
+  "title": "Forward / Inverse Duration (ms)",
+  "targets": [
+    { "expr": "ten_d_forward_ms", "legendFormat": "forward" },
+    { "expr": "ten_d_inverse_ms", "legendFormat": "inverse" }
+  ]
+}
+```
+
+And:
+
+```json
+{
+  "type": "timeseries",
+  "title": "Matrix Condition Number",
+  "targets": [
+    { "expr": "ten_d_matrix_condition", "legendFormat": "cond(A)" }
+  ]
+}
+```
+
+These panels are **schema‑driven**, matching your USM metrics definitions.
+
+---
+
+# **🧠 How the Grafana Dashboard interacts with the system**
+
+| Subsystem | Role |
+|----------|------|
+| **Instrumentation Layer** | Emits Prometheus metrics |
+| **Metrics Log** | Stores historical values |
+| **Differential Analyzer** | Provides Δ‑norm trends |
+| **Benchmark Harness** | Produces load for stress dashboards |
+| **Visualization Suite** | Shares projection metadata |
+| **Replay Engine** | Can replay metrics for debugging |
+
+The dashboard is the **operational observability layer**.
+
+---
+
+# **🎯 Summary (the essence)**
+
+The **Grafana Dashboard** is:
+
+> **A real‑time, Prometheus‑powered monitoring interface that visualizes performance, stability, entanglement behavior, Δ‑norms, and reversibility — giving you a live cockpit for the 10D engine.**
+
+It is the **operational heartbeat** of your system.
+
+---
+
+If you want, we can continue with:
+
+- **Interactive Visualizer**  
+- **3D Attractor View**  
+- **Python Client Layer**  
+
+Which subsystem should we break down next?
