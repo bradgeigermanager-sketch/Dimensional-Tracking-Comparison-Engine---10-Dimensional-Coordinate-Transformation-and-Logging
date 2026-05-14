@@ -1,0 +1,184 @@
+The **USM Compatibility Matrix** is the *contract map* that tells your entire architecture **which versions can safely interact with which** — schemas, manifests, generators, engines, and migration plans.  
+If the **USM Versioning Model** is the timeline and the **USM Migration System** is the time machine, the Compatibility Matrix is the **traffic controller** that prevents collisions.
+
+It is the system that ensures **every component can talk to every other component safely**, across time, across versions, and across schema evolution.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The USM Compatibility Matrix is:
+
+> **A declarative, schema‑driven table that defines which schema versions, manifest versions, generator versions, and engine versions are mutually compatible — and what migration paths exist between them.**
+
+It is the **safety net** for your entire versioned ecosystem.
+
+---
+
+## **🧩 Why the Compatibility Matrix Exists**
+
+Because your architecture is:
+
+- schema‑first  
+- manifest‑driven  
+- version‑layered  
+- migration‑capable  
+- replay‑dependent  
+
+You need a formal way to answer:
+
+- Can Engine v0.9.12 load a Manifest v6?  
+- Can Schema v1.5.0 be used with Generator v2.1.3?  
+- Can a Manifest v3 be migrated to Schema v1.4.0?  
+- Which versions are forward‑compatible?  
+- Which versions require migration?  
+- Which versions are forbidden?  
+
+The Compatibility Matrix encodes all of this.
+
+---
+
+## **📐 The Four Dimensions of Compatibility**
+
+The matrix covers compatibility across:
+
+1. **Schema Version (SV)**  
+2. **Manifest Version (MV)**  
+3. **Generator Version (GV)**  
+4. **Engine Version (EV)**  
+
+Each dimension has rules for:
+
+- **direct compatibility**  
+- **migration‑required compatibility**  
+- **incompatible**  
+
+---
+
+## **📊 The Canonical Compatibility Matrix**
+
+Here is the conceptual structure (your actual matrix is stored in the USM metadata):
+
+| From / To | SV | MV | GV | EV |
+|-----------|----|----|----|----|
+| **SV → SV** | direct if minor | migrate if major | never backward | always validated |
+| **MV → SV** | migrate if older | direct if equal | forbidden if newer | validated by schema |
+| **GV → SV** | direct if generator supports schema | regenerate required | incompatible if older | validated by CI |
+| **EV → SV** | direct if engine supports schema | migrate manifest | incompatible if physics changed | validated by runtime |
+
+This is the **ruleset** that governs all interactions.
+
+---
+
+## **🧠 How the Compatibility Matrix Works Internally**
+
+### **1. Declarative Rules**
+The matrix is stored as a JSON structure inside the USM metadata:
+
+```json
+{
+  "compatibility": {
+    "schema": {
+      "1.4.0": ["1.3.x", "1.4.x"],
+      "1.5.0": ["1.4.x"]
+    },
+    "engine": {
+      "0.9.12": ["1.4.x"],
+      "0.9.13": ["1.4.x", "1.5.x"]
+    }
+  }
+}
+```
+
+This is the **source of truth**.
+
+---
+
+### **2. Runtime Compatibility Checks**
+When loading a manifest, the engine checks:
+
+- SV compatibility  
+- MV compatibility  
+- EV compatibility  
+- GV compatibility  
+
+If incompatible → migration is triggered.
+
+If migration impossible → load is rejected.
+
+---
+
+### **3. CI Enforcement**
+Your CI pipeline:
+
+- validates the matrix  
+- ensures no contradictory rules  
+- ensures migration plans exist for all required transitions  
+- blocks PRs that break compatibility  
+
+This keeps the matrix **self‑consistent**.
+
+---
+
+### **4. Replay Engine Integration**
+Replay uses the matrix to determine:
+
+- which schema version to load  
+- which engine version to emulate  
+- which migration plan to apply  
+
+This guarantees **deterministic replay**.
+
+---
+
+## **📦 Example Compatibility Decision**
+
+**Scenario:**  
+Manifest v5, Schema v1.3.0, Engine v0.9.12, Generator v2.1.3.
+
+**Matrix says:**
+
+- Engine v0.9.12 supports Schema v1.4.x → ❌ incompatible  
+- Manifest v5 targets Schema v1.3.0 → ⚠️ migration required  
+- Generator v2.1.3 supports Schema v1.4.x → ✔️ compatible  
+
+**Result:**  
+Manifest must be migrated to Schema v1.4.0 before loading.
+
+---
+
+## **🛡️ Guarantees Provided by the Compatibility Matrix**
+
+### **1. No silent breakage**
+Incompatible versions are **explicitly rejected**.
+
+### **2. Automatic migration**
+If migration is possible, it is triggered automatically.
+
+### **3. Deterministic behavior**
+Same versions → same compatibility result.
+
+### **4. Replay safety**
+Old logs always load correctly.
+
+### **5. Auditability**
+Every compatibility decision is logged.
+
+---
+
+## **🎯 Final Summary**
+
+The **USM Compatibility Matrix** is:
+
+> **A declarative, schema‑driven ruleset that defines which schema, manifest, generator, and engine versions can interact — and when migration is required — ensuring safety, determinism, and audit‑grade reproducibility across the entire system.**
+
+It is the **traffic controller** of your versioned architecture.
+
+---
+
+If you want, we can continue with:
+
+- **USM Migration System**  
+- **Schema‑Driven Test Generator**  
+- **Graphviz Dependency Graph**  
+
+Which subsystem should we explore next?
