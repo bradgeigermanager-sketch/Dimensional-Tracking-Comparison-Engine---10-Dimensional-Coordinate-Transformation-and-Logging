@@ -1,0 +1,300 @@
+Here is a **fully refactored, concrete, implementation‑ready Step Record**, expressed as a clean, strongly‑typed, language‑agnostic model — then rendered in **TypeScript**, **Python**, and **JSON Schema** so you can drop it directly into your system.
+
+This is the *canonical*, unified representation that every subsystem (Transform Engine, Replay Engine, Metrics Log, Input Log, Coordinate Log, Differential Analyzer, Visualizer) consumes or produces.
+
+---
+
+# **THE CANONICAL STEP RECORD (Unified Model)**  
+This is the authoritative structure:
+
+```
+StepRecord
+ ├─ node_id: string
+ ├─ step_index: int
+ ├─ direction: "forward" | "inverse"
+ ├─ timestamps
+ │    └─ created_at: datetime
+ ├─ state
+ │    ├─ before: float[10]
+ │    └─ after: float[10]
+ ├─ inputs
+ │    ├─ delta_axis: int | null
+ │    ├─ delta_value: float | null
+ │    ├─ matrix_snapshot: float[121]
+ │    └─ entanglement_snapshot: EntanglementBond[]
+ ├─ metrics
+ │    ├─ duration_ms: float
+ │    ├─ matrix_condition: float
+ │    ├─ matrix_det: float
+ │    ├─ entanglement_count: int
+ │    ├─ state_norm_before: float
+ │    ├─ state_norm_after: float
+ │    └─ reversible_error: float | null
+ └─ versions
+      ├─ usm_schema_version: string
+      ├─ manifest_version: int
+      ├─ generator_version: string
+      └─ engine_version: string
+```
+
+This is the **single source of truth** for all logs and replay.
+
+---
+
+# **1. TypeScript Implementation (Concrete)**  
+This is ready to paste into your codebase.
+
+```ts
+export interface StepRecord {
+  node_id: string;
+  step_index: number;
+  direction: "forward" | "inverse";
+
+  timestamps: {
+    created_at: string; // ISO 8601
+  };
+
+  state: {
+    before: number[]; // length 10
+    after: number[];  // length 10
+  };
+
+  inputs: {
+    delta_axis: number | null;
+    delta_value: number | null;
+    matrix_snapshot: number[]; // length 121
+    entanglement_snapshot: EntanglementBond[];
+  };
+
+  metrics: {
+    duration_ms: number;
+    matrix_condition: number;
+    matrix_det: number;
+    entanglement_count: number;
+    state_norm_before: number;
+    state_norm_after: number;
+    reversible_error: number | null;
+  };
+
+  versions: {
+    usm_schema_version: string;
+    manifest_version: number;
+    generator_version: string;
+    engine_version: string;
+  };
+}
+
+export interface EntanglementBond {
+  source_dim: number;
+  target_dim: number;
+  ratio: number;
+  type: "linear" | "inhibitory" | "excitatory" | "resonant";
+}
+```
+
+---
+
+# **2. Python Implementation (Concrete)**  
+This version uses `pydantic` for validation.
+
+```python
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import datetime
+
+class EntanglementBond(BaseModel):
+    source_dim: int
+    target_dim: int
+    ratio: float
+    type: str  # "linear", "inhibitory", "excitatory", "resonant"
+
+class StepRecord(BaseModel):
+    node_id: str
+    step_index: int
+    direction: str  # "forward" or "inverse"
+
+    timestamps: dict = Field(...)
+    state: dict = Field(...)
+    inputs: dict = Field(...)
+    metrics: dict = Field(...)
+    versions: dict = Field(...)
+```
+
+You can expand the nested dicts into full models if you want strict typing.
+
+---
+
+# **3. JSON Schema (Concrete)**  
+This is the authoritative schema for validation and generation.
+
+```json
+{
+  "title": "StepRecord",
+  "type": "object",
+  "required": [
+    "node_id",
+    "step_index",
+    "direction",
+    "timestamps",
+    "state",
+    "inputs",
+    "metrics",
+    "versions"
+  ],
+  "properties": {
+    "node_id": { "type": "string" },
+    "step_index": { "type": "integer" },
+    "direction": {
+      "type": "string",
+      "enum": ["forward", "inverse"]
+    },
+    "timestamps": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["created_at"]
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 10,
+          "maxItems": 10
+        },
+        "after": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 10,
+          "maxItems": 10
+        }
+      },
+      "required": ["before", "after"]
+    },
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "delta_axis": { "type": ["integer", "null"] },
+        "delta_value": { "type": ["number", "null"] },
+        "matrix_snapshot": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 121,
+          "maxItems": 121
+        },
+        "entanglement_snapshot": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_dim": { "type": "integer" },
+              "target_dim": { "type": "integer" },
+              "ratio": { "type": "number" },
+              "type": {
+                "type": "string",
+                "enum": ["linear", "inhibitory", "excitatory", "resonant"]
+              }
+            },
+            "required": ["source_dim", "target_dim", "ratio", "type"]
+          }
+        }
+      },
+      "required": [
+        "delta_axis",
+        "delta_value",
+        "matrix_snapshot",
+        "entanglement_snapshot"
+      ]
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "duration_ms": { "type": "number" },
+        "matrix_condition": { "type": "number" },
+        "matrix_det": { "type": "number" },
+        "entanglement_count": { "type": "integer" },
+        "state_norm_before": { "type": "number" },
+        "state_norm_after": { "type": "number" },
+        "reversible_error": { "type": ["number", "null"] }
+      },
+      "required": [
+        "duration_ms",
+        "matrix_condition",
+        "matrix_det",
+        "entanglement_count",
+        "state_norm_before",
+        "state_norm_after",
+        "reversible_error"
+      ]
+    },
+    "versions": {
+      "type": "object",
+      "properties": {
+        "usm_schema_version": { "type": "string" },
+        "manifest_version": { "type": "integer" },
+        "generator_version": { "type": "string" },
+        "engine_version": { "type": "string" }
+      },
+      "required": [
+        "usm_schema_version",
+        "manifest_version",
+        "generator_version",
+        "engine_version"
+      ]
+    }
+  }
+}
+```
+
+---
+
+# **4. Why this Step Record is the correct refactor**
+
+### ✔ Unifies all logs  
+Coordinate, Input, and Metrics logs are now **views** over the same canonical record.
+
+### ✔ Replay Engine becomes trivial  
+Replay simply loads StepRecord[k] and replays it.
+
+### ✔ Transform Engine becomes deterministic  
+It emits exactly one StepRecord per step.
+
+### ✔ Test Generator becomes simpler  
+It can generate:
+- round‑trip tests  
+- replay tests  
+- reversible tests  
+directly from this structure.
+
+### ✔ Migration System becomes safer  
+Version blocks are embedded inside every StepRecord.
+
+### ✔ Visualizer becomes consistent  
+It reads:
+- `state.after`
+- `inputs.delta_axis`
+- `metrics.reversible_error`
+- `versions.*`
+- `view_manifold` (external)
+
+### ✔ Differential Analyzer becomes cleaner  
+It computes Δ‑vectors from `state.before` and `state.after`.
+
+---
+
+# If you want, I can now generate:
+
+### **A. A full database schema for StepRecord**  
+(Postgres with partitioning by node_id or step_index)
+
+### **B. A full replay algorithm using StepRecord**  
+(Forward + inverse reconstruction)
+
+### **C. A full Transform Engine refactor that emits StepRecord**  
+(Concrete code)
+
+### **D. A full CI pipeline enforcing reversibility invariants**
+
+Just tell me which direction you want to go next.
