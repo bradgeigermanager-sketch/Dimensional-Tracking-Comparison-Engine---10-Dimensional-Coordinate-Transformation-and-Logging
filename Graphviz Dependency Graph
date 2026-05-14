@@ -1,0 +1,191 @@
+The **Graphviz Dependency Graph** is the subsystem that turns your entire USM architecture into a **visual, navigable DAG** — a map of how every module, log, generator, analyzer, and engine component depends on every other.  
+If the **USM Schema Architecture** is the genome, the Graphviz Dependency Graph is the **circulatory map**: it shows how information flows through the system.
+
+---
+
+## **🎯 Core Idea (the essence)**  
+The Graphviz Dependency Graph is:
+
+> **A schema‑driven, auto‑generated directed graph that visualizes structural, logical, and causal dependencies across all USM modules — enabling debugging, auditing, onboarding, and architectural reasoning.**
+
+It is the **structural mirror** of your entire engine.
+
+---
+
+## **🌐 What the Graphviz Dependency Graph *is***  
+A **DOT‑format graph** generated from the USM schema and module metadata that shows:
+
+- module → module dependencies  
+- log → engine dependencies  
+- generator → schema dependencies  
+- analyzer → log dependencies  
+- visualizer → projection dependencies  
+- migration → version dependencies  
+
+It is a **single, unified DAG** of the whole system.
+
+---
+
+## **🧩 What the Graph Shows**
+
+Each node in the graph corresponds to a USM subsystem, such as:
+
+- **Transform Engine**  
+- **Replay Engine**  
+- **Metrics Log**  
+- **Input Log**  
+- **Differential Analyzer**  
+- **Projection Modes**  
+- **Schema‑Driven Code Generator**  
+- **Schema‑Driven Docs Generator**  
+- **Schema‑Driven Test Generator**  
+- **USM Migration System**  
+
+Edges represent:
+
+- **depends_on**  
+- **produces**  
+- **consumes**  
+- **validates**  
+- **generates**  
+- **updates**  
+
+This creates a **causal map** of the architecture.
+
+---
+
+## **📐 Example (Conceptual) Graphviz Structure**
+
+```dot
+digraph USM {
+  rankdir=LR;
+
+  TransformEngine -> MetricsLog;
+  TransformEngine -> CoordinateLog;
+  TransformEngine -> InputLog;
+
+  ReplayEngine -> CoordinateLog;
+  ReplayEngine -> InputLog;
+
+  Schema -> CodeGenerator;
+  Schema -> DocsGenerator;
+  Schema -> TestGenerator;
+
+  MigrationSystem -> Schema;
+  MigrationSystem -> Manifest;
+
+  DifferentialAnalyzer -> CoordinateLog;
+  ProjectionModes -> CoordinateLog;
+  Visualizer -> ProjectionModes;
+}
+```
+
+This is the **structural skeleton** of your system.
+
+---
+
+## **🧠 Why the Graphviz Dependency Graph Matters**
+
+### **1. Architectural Clarity**
+You can see:
+
+- where data flows  
+- where cycles might form  
+- where modules depend on logs  
+- where generators depend on schema  
+
+It is the **map** of the system.
+
+---
+
+### **2. Debugging**
+If something breaks:
+
+- follow the edges  
+- find upstream dependencies  
+- identify the failing module  
+
+The graph is your **debugging compass**.
+
+---
+
+### **3. Schema Evolution**
+When the schema changes:
+
+- the graph shows which modules regenerate  
+- which logs are affected  
+- which migration plans must update  
+
+It is the **impact analysis tool**.
+
+---
+
+### **4. Onboarding**
+New developers can understand the entire system in minutes.
+
+The graph is the **architectural overview**.
+
+---
+
+### **5. Auditability**
+Auditors can verify:
+
+- causal flows  
+- dependency correctness  
+- absence of cycles  
+- schema alignment  
+
+It is the **compliance diagram**.
+
+---
+
+## **🧩 How the Graph is Generated**
+
+The generator reads:
+
+- USM schema  
+- module metadata  
+- dependency annotations  
+- version metadata  
+
+Then emits:
+
+- `usm_graph.dot`  
+- `usm_graph.png` (rendered)  
+
+This is the same mechanism you used earlier to generate the **USM Manifest Dependency Graph**.
+
+---
+
+## **📊 How the Graph Integrates with the System**
+
+| Subsystem | Role |
+|----------|------|
+| **USM Schema** | Defines structural relationships |
+| **Code Generator** | Emits DOT files |
+| **Docs Generator** | Embeds rendered graphs |
+| **CI Pipeline** | Validates graph determinism |
+| **Migration System** | Uses graph for impact analysis |
+| **Developers** | Use graph for architectural reasoning |
+
+The graph is the **structural truth table** of your architecture.
+
+---
+
+## **🎯 Final Summary**
+
+The **Graphviz Dependency Graph** is:
+
+> **A schema‑driven, auto‑generated DAG that visualizes all structural, logical, and causal dependencies across the USM ecosystem — enabling debugging, onboarding, auditability, and architectural clarity.**
+
+It is the **map** of your entire system.
+
+---
+
+If you want, we can continue with:
+
+- **Structure Tests**  
+- **Migration Tests**  
+- **Transform Engine**  
+
+Which subsystem should we explore next?
