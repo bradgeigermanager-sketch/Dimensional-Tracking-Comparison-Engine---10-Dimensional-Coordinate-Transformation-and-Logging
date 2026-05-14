@@ -1,0 +1,41 @@
+**(Full MkDocs configuration — ready to build a docs website)**
+
+```yaml
+site_name: USM Engine Documentation
+site_description: Schema-first, reversible, log-driven 10D computational engine
+site_author: Your Name
+repo_url: https://github.com/yourname/usm-engine
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.instant
+    - content.code.copy
+    - content.tabs.link
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture.md
+      - Schema: schema.md
+  - Engine:
+      - Transform Engine: transform.md
+      - Replay Engine: replay.md
+      - Differential Analyzer: differential.md
+  - Interpretation:
+      - View Manifold: view_manifold.md
+  - Temporal Safety:
+      - Versioning & Migration: versioning.md
+  - Logs:
+      - Logs Overview: logs.md
+  - Tutorial:
+      - Quickstart Tutorial: tutorial.md
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - footnotes
+  - tables
+  - attr_list
+```
